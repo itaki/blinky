@@ -1,0 +1,61 @@
+[
+    {
+        "id_num": 1,
+        "name": "TableSaw",
+        "status": "off",
+        "gate_prefs": [0,0,0,0,0,1,1,0],
+        "sensor_type": "voltage",
+        "sensor_pin": A1,
+        "amp_trigger" = 10,
+        "last_used" = 0,
+        "spin_down_time": 45
+    },
+    {
+        "id": "FloorSweep",
+        "status": false,
+        "gate_prefs": {false,false,false,false,false,true,true,false},
+        "sensor_type": "button",
+        "spin_down_time": 5
+    },
+    {
+        "id": "MiterSaw",
+        "status": false,
+        "gate_prefs": {false,false,false,false,false,true,true,false},
+        "sensor_type": "voltage",
+        "spin_down_time": 60
+    },    {
+        "id": "BandSaw",
+        "status": false,
+        "gate_prefs": {false,false,false,false,false,true,true,false},
+        "sensor_type": "voltage",
+        "spin_down_time": 45
+    },
+    {
+        "id": "HighHose",
+        "status": false,
+        "gate_prefs": {false,false,false,false,false,true,true,false},
+        "sensor_type": "voltage",
+        "spin_down_time": 45
+    },
+    {
+        "id": "jointer",
+        "status": false,
+        "gate_prefs": {false,false,false,false,false,true,true,false},
+        "sensor_type": "voltage",
+        "spin_down_time": 45
+    },
+    {
+        "id": "PlanerTable",
+        "status": false,
+        "gate_prefs": {false,false,false,false,false,true,true,false},
+        "sensor_type": "voltage",
+        "spin_down_time": 45
+    },
+    {
+        "id": "SandingTable",
+        "status": false,
+        "gate_prefs": {false,false,false,false,false,true,true,false},
+        "sensor_type": "voltage",
+        "spin_down_time": 45
+    },
+]

@@ -1,0 +1,161 @@
+/* SHOP BOT Framework
+* by Michael McReynolds
+*/
+
+class Tool {
+`public:`
+	bool gate_prefs;
+	float spin_down;
+	string indicator;
+	void status()
+};
+
+int main(){
+	Tool tablesaw;
+	//Access attributes and set values
+	tablesaw.gate_prefs = {false,false,false,false,false,true,true,false}
+	tablesaw.spin_down = 45*1000 //time in milliseconds
+	tablesaw.indicator = "voltage"
+}
+
+class Collector {
+	public:
+	float spin_down;
+}
+
+how do I cycle through all the tools?
+
+function is_a_tool_on (tools){
+	for i=0,i=number_of_tools,i++{
+		if tools[i].status = true{
+			return(true)
+		}
+	}
+}
+
+
+
+set pins
+What does it mean to say a tool is "ON"?
+The dust collector is on and the gates to that tool are open 
+
+What does it mean to say the tool is "OFF"?
+If there are no other tools on, the dust collector is off 
+If there are other tools on, the gates to that tool are closed 
+
+There should be a function tools_are_on(tool_status)
+And it should just return if any tools are on 
+
+When turning off a tool, you should first turn it off in the array, then run tools_are_on
+to see if any other tools are on 
+
+When turning on a tool it should just write to an array called tool_status
+
+Should tool_status be a part of the shop manager?
+
+
+
+
+const int number_of_tools = 3
+
+String tool_list[number_of_tools] = {"sweep","miter saw","table saw"}
+int sensor_pin[number_of_tools] = {A1,A2,A3}
+
+
+
+for (int i=0;i<number_of_tools;i++){
+	tool_status(tool_list[i],INPUT);
+	if tools_status
+
+}
+
+void loop()
+{
+	if tool1 == HIGH and gate1 == closed{
+		gate1(open)
+	}
+}
+
+
+for each tool(tool){
+	if tool is on{
+		flag which tool is on
+		check to see if collector is running
+		if not start collector
+	}
+}
+if all tools are off{
+	if dusty is running{
+		if time is running
+			if time is over 45 secs
+				turn off dusty
+
+		else{
+			start timer
+		}
+	}
+
+}
+
+
+when a tool goes on it needs to check and see if it's gates are open. If they aren't it needs to open them.
+It also needs to check and see if it can close other gates
+if another tools currently running, it can't close it's gates but still needs to open it's gates
+
+When a tool goes off, it should check if it was the only one running. If so, it shouldn't do anything //the chances are that that same tool will used again next
+if there are other tools running, then it should close it's gates.
+
+The tool shouldn't do any of the logic.
+
+tool goes off should tell collector "hey I went off"
+
+collector is like 
+I see you went off, if their aren't any tools running, I'm going to start the
+spindown process, so I'll flag the main function to shut off the collector in :45
+
+I see you went off, but there are still tools running so I'm just going keep running
+
+
+main loop should have something like
+if spinup == false{
+	if timer not started{
+		starttimer
+	}
+	if time > timer{
+		collector pin = LOW
+	}
+}
+else if spinup == true{
+	collector pin = HIGH
+
+}
+
+If the tool goes on it should tell the blast_gate manager "hey, I'm on and
+here are my gate prefs". If there are no other tools running than it should
+set all the gates to the prefences. If there are other tools running then 
+it should ONLY open it's "open" gates.
+
+if the tool goes off, it should tell the blast gate manager "hey, I'm off and
+here are my gate prefs." If there are other tools on, it
+should only set it's "open" gates to closed. If there are no other tools on,
+it should do nothing 
+
+
+the tools job should only be to determine if it's on or off 
+
+The shop managers job should be to manage the status of the tools and
+send the list to the gatekeeper and collector 
+
+so in the tool it should have it's own spindown time before going off
+
+there is a difference between a tool being on and a tool turning on. Likewise
+there is a difference between a tool being off and turning off
+
+when tool goes off, set a timestamp and turn on "shutdown"
+then when time - timestamp
+
+
+Use cheap ethernet cables and RJ-45 jacks for data and power "
+
+f
+

@@ -1,0 +1,9 @@
+background = 16171d
+green = 81f900
+orange = ff9700
+blue = 19d1e5
+red = ff3f4f
+yellow = fed845
+purple = e373ce
+
+vscode://vscode.github-authentication/did-authenticate?windowid=1&code=03ca45054360b0c2fc75&state=ae7a5bbb-de7d-4683-97b9-f6122834baed

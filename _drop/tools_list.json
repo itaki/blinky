@@ -1,0 +1,123 @@
+[
+  {
+    "id_num": 1,
+    "name": "TableSaw",
+    "status": false,
+    "gate_prefs": [0, 0, 1, 1, 1, 1, 1, 1, 1],
+    "button_pin": 0,
+    "voltage_pin": 12,
+    "amp_trigger": 10,
+    "keyboard_key": 49,
+    "last_used": 0,
+    "spin_down_time": 2
+  },
+  {
+    "id_num": 2,
+    "name": "MiterSaw",
+    "status": false,
+    "gate_prefs": [1, 1, 0, 1, 1, 1, 1, 1, 1],
+    "button_pin": 0,
+    "voltage_pin": 13,
+    "amp_trigger": 10,
+    "keyboard_key": 50,
+    "last_used": 0,
+    "spin_down_time": 30
+  },
+  {
+    "id_num": 3,
+    "name": "BandSaw",
+    "status": false,
+    "gate_prefs": [1, 1, 1, 1, 0, 1, 1, 1, 1],
+    "button_pin": 0,
+    "voltage_pin": 14,
+    "amp_trigger": 10,
+    "keyboard_key": 51,
+    "last_used": 0,
+    "spin_down_time": 10
+  },
+  {
+    "id_num": 4,
+    "name": "Jointer",
+    "status": false,
+    "gate_prefs": [1, 1, 1, 1, 1, 0, 1, 1, 1],
+    "button_pin": 0,
+    "voltage_pin": 12,
+    "amp_trigger": 10,
+    "keyboard_key": 52,
+    "last_used": 0,
+    "spin_down_time": 10
+  },
+  {
+    "id_num": 5,
+    "name": "HighHose",
+    "status": false,
+    "gate_prefs": [1, 1, 1, 1, 1, 1, 0, 1, 1],
+    "button_pin": 0,
+    "voltage_pin": 13,
+    "amp_trigger": 10,
+    "keyboard_key": 53,
+    "last_used": 0,
+    "spin_down_time": 0
+  },
+  {
+    "id_num": 6,
+    "name": "FloorSweep",
+    "status": false,
+    "gate_prefs": [1, 1, 1, 1, 1, 1, 1, 0, 1],
+    "button_pin": 0,
+    "voltage_pin": 14,
+    "amp_trigger": 10,
+    "keyboard_key": 54,
+    "last_used": 0,
+    "spin_down_time": 0
+  },
+  {
+    "id_num": 7,
+    "name": "PlanerTable",
+    "status": false,
+    "gate_prefs": [1, 1, 1, 1, 1, 1, 1, 1, 0],
+    "button_pin": 0,
+    "voltage_pin": 13,
+    "amp_trigger": 10,
+    "keyboard_key": 55,
+    "last_used": 0,
+    "spin_down_time": 0
+  },
+  {
+    "id_num": 8,
+    "name": "Sander",
+    "status": false,
+    "gate_prefs": [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    "button_pin": 0,
+    "voltage_pin": 14,
+    "amp_trigger": 10,
+    "keyboard_key": 56,
+    "last_used": 0,
+    "spin_down_time": 0
+  },
+  {
+    "id_num": 9,
+    "name": "OpenAll",
+    "status": false,
+    "gate_prefs": [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "button_pin": 0,
+    "voltage_pin": 13,
+    "amp_trigger": 10,
+    "keyboard_key": 57,
+    "last_used": 0,
+    "spin_down_time": 0
+  },
+  {
+    "id_num": 0,
+    "name": "CloseAll",
+    "status": false,
+    "gate_prefs": [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    "button_pin": 0,
+    "voltage_pin": 14,
+    "amp_trigger": 10,
+    "keyboard_key": 48,
+    "last_used": 0,
+    "spin_down_time": 0
+  }
+  
+]

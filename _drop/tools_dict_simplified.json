@@ -1,0 +1,41 @@
+{   
+   "TableSaw":    
+   {
+        "id_num": 1,
+        "name": "TableSaw",
+        "status": "off",
+        "gate_prefs": [false,false,false,false,false,true,true,false],
+        "sensor_type": "keyboard",
+        "keyboard_key": 49,
+        "sensor_pin": 12,
+        "amp_trigger": 10,
+        "last_used": 0,
+        "spin_down_time": 45
+    },
+    "MiterSaw":
+     {
+        "id_num": 2,
+        "name": "MiterSaw",
+        "status": "off",
+        "gate_prefs": [false,true,false,false,false,false,false,false],
+        "sensor_type": "keyboard",
+        "keyboard_key": 50,
+        "sensor_pin": 13,
+        "amp_trigger": 10,
+        "last_used": 0,
+        "spin_down_time": 45
+    },
+    "BandSaw":
+    {
+       "id_num": 3,
+       "name": "BandSaw",
+       "status": "off",
+       "gate_prefs": [false,true,false,false,false,false,false,false],
+       "sensor_type": "keyboard",
+       "keyboard_key": 51,
+       "sensor_pin": 14,
+       "amp_trigger": 10,
+       "last_used": 0,
+       "spin_down_time": 45
+   }
+}

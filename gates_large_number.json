@@ -1,0 +1,443 @@
+[
+  {
+    "name": "T",
+    "number": 1,
+    "location": "tablesaw",
+    "status": 1,
+    "pin": 0,
+    "min": 65,
+    "max": 136,
+    "info": ""
+  },
+  {
+    "name": "H",
+    "number": 2,
+    "location": "hose",
+    "status": 1,
+    "pin": 1,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "M",
+    "number": 3,
+    "location": "mitersaw",
+    "status": 1,
+    "pin": 2,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "F",
+    "number": 4,
+    "location": "floorsweep",
+    "status": 1,
+    "pin": 6,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "ML",
+    "number": 5,
+    "location": "mitersaw_left",
+    "status": 1,
+    "pin": 2,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "MR",
+    "number": 6,
+    "location": "mitersaw_right",
+    "status": 1,
+    "pin": 2,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "L",
+    "number": 7,
+    "location": "lathe",
+    "status": 1,
+    "pin": 5,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "B",
+    "number": 8,
+    "location": "bandsaw",
+    "status": 1,
+    "pin": 3,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "S",
+    "number": 9,
+    "location": "sandingtable",
+    "status": 1,
+    "pin": 8,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "J",
+    "number": 10,
+    "location": "jointer",
+    "status": 1,
+    "pin": 4,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "P",
+    "number": 11,
+    "location": "planer",
+    "status": 1,
+    "pin": 7,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "T",
+    "number": 1,
+    "location": "tablesaw",
+    "status": 1,
+    "pin": 0,
+    "min": 65,
+    "max": 136,
+    "info": ""
+  },
+  {
+    "name": "H",
+    "number": 2,
+    "location": "hose",
+    "status": 1,
+    "pin": 1,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "M",
+    "number": 3,
+    "location": "mitersaw",
+    "status": 1,
+    "pin": 2,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "F",
+    "number": 4,
+    "location": "floorsweep",
+    "status": 1,
+    "pin": 6,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "ML",
+    "number": 5,
+    "location": "mitersaw_left",
+    "status": 1,
+    "pin": 2,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "MR",
+    "number": 6,
+    "location": "mitersaw_right",
+    "status": 1,
+    "pin": 2,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "L",
+    "number": 7,
+    "location": "lathe",
+    "status": 1,
+    "pin": 5,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "B",
+    "number": 8,
+    "location": "bandsaw",
+    "status": 1,
+    "pin": 3,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "S",
+    "number": 9,
+    "location": "sandingtable",
+    "status": 1,
+    "pin": 8,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "J",
+    "number": 10,
+    "location": "jointer",
+    "status": 1,
+    "pin": 4,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "P",
+    "number": 11,
+    "location": "planer",
+    "status": 1,
+    "pin": 7,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "T",
+    "number": 1,
+    "location": "tablesaw",
+    "status": 1,
+    "pin": 0,
+    "min": 65,
+    "max": 136,
+    "info": ""
+  },
+  {
+    "name": "H",
+    "number": 2,
+    "location": "hose",
+    "status": 1,
+    "pin": 1,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "M",
+    "number": 3,
+    "location": "mitersaw",
+    "status": 1,
+    "pin": 2,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "F",
+    "number": 4,
+    "location": "floorsweep",
+    "status": 1,
+    "pin": 6,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "ML",
+    "number": 5,
+    "location": "mitersaw_left",
+    "status": 1,
+    "pin": 2,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "MR",
+    "number": 6,
+    "location": "mitersaw_right",
+    "status": 1,
+    "pin": 2,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "L",
+    "number": 7,
+    "location": "lathe",
+    "status": 1,
+    "pin": 5,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "B",
+    "number": 8,
+    "location": "bandsaw",
+    "status": 1,
+    "pin": 3,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "S",
+    "number": 9,
+    "location": "sandingtable",
+    "status": 1,
+    "pin": 8,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "J",
+    "number": 10,
+    "location": "jointer",
+    "status": 1,
+    "pin": 4,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "P",
+    "number": 11,
+    "location": "planer",
+    "status": 1,
+    "pin": 7,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "T",
+    "number": 1,
+    "location": "tablesaw",
+    "status": 1,
+    "pin": 0,
+    "min": 65,
+    "max": 136,
+    "info": ""
+  },
+  {
+    "name": "H",
+    "number": 2,
+    "location": "hose",
+    "status": 1,
+    "pin": 1,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "M",
+    "number": 3,
+    "location": "mitersaw",
+    "status": 1,
+    "pin": 2,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "F",
+    "number": 4,
+    "location": "floorsweep",
+    "status": 1,
+    "pin": 6,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "ML",
+    "number": 5,
+    "location": "mitersaw_left",
+    "status": 1,
+    "pin": 2,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "MR",
+    "number": 6,
+    "location": "mitersaw_right",
+    "status": 1,
+    "pin": 2,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "L",
+    "number": 7,
+    "location": "lathe",
+    "status": 1,
+    "pin": 5,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "B",
+    "number": 8,
+    "location": "bandsaw",
+    "status": 1,
+    "pin": 3,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "S",
+    "number": 9,
+    "location": "sandingtable",
+    "status": 1,
+    "pin": 8,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "J",
+    "number": 10,
+    "location": "jointer",
+    "status": 1,
+    "pin": 4,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  },
+  {
+    "name": "P",
+    "number": 11,
+    "location": "planer",
+    "status": 1,
+    "pin": 7,
+    "min": 0,
+    "max": 180,
+    "info": ""
+  }
+
+]
