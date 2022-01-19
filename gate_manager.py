@@ -277,7 +277,8 @@ class Gate_Manager:
         my_gate = self.gates[gate_key]
         pin = my_gate.pin
         key = None
-        # adjustment = 0
+        adjustment = 0
+        flagged = True
 
         too_high = False
         too_low = False

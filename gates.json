@@ -1,15 +1,5 @@
 [
     {
-        "name": "T",
-        "number": 12,
-        "location": "another test",
-        "status": false,
-        "pin": 14,
-        "min": 70,
-        "max": 90,
-        "info": "info"
-    },
-    {
         "name": "H",
         "number": 1,
         "location": "hose",
@@ -108,5 +98,15 @@
         "min": 49,
         "max": 162,
         "info": ""
+    },
+    {
+        "name": "T",
+        "number": 12,
+        "location": "another test",
+        "status": false,
+        "pin": 14,
+        "min": 70,
+        "max": 90,
+        "info": "info"
     }
 ]

@@ -538,45 +538,45 @@ if use_voltage:
 
 run = True
 
+if __name__ == '__main__':
+    while run:
+        
+        if use_gui: #
+            '''this runs pygame and draws all the buttons on every cycle'''
+            screen.fill(bg)
+            for button in gui_buttons:
+                if gui_buttons[button].draw_button():
+                    pass
+            for gate in gate_buttons: 
+                if gate_buttons[gate].draw_button():
+                    pass
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    keyboard_manager(event.key)
+                elif event.type == pygame.QUIT:
+                    run = False        
+            pygame.display.update()
 
-while run:
-    
-    if use_gui: #
-        '''this runs pygame and draws all the buttons on every cycle'''
-        screen.fill(bg)
-        for button in gui_buttons:
-            if gui_buttons[button].draw_button():
-                pass
-        for gate in gate_buttons: 
-            if gate_buttons[gate].draw_button():
-                pass
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                keyboard_manager(event.key)
-            elif event.type == pygame.QUIT:
-                run = False        
-        pygame.display.update()
-
-    if use_voltage:
-        for tool in tools:
-            current_tool = tools[tool]
-            if current_tool.override == False:
-                if current_tool.voltage_pin != 0: # only check for tools that are on the amp trigger
-                    
-                    if current_tool.chan.voltage >= current_tool.amp_trigger:
-                        cycles = 0
-                        if current_tool.status != "on":
-                            print(current_tool.chan.voltage)
-                            current_tool.turn_on()
-                    elif current_tool.chan.voltage < current_tool.amp_trigger and current_tool.status == "on":
-                        if cycles >= review_cycles:
-                            print(current_tool.chan.voltage)
-                            current_tool.spindown()
+        if use_voltage:
+            for tool in tools:
+                current_tool = tools[tool]
+                if current_tool.override == False:
+                    if current_tool.voltage_pin != 0: # only check for tools that are on the amp trigger
+                        
+                        if current_tool.chan.voltage >= current_tool.amp_trigger:
                             cycles = 0
-                        else:
-                            cycles = cycles + 1
-    # run through all the tools to see if they are on
-    shop_manager()
+                            if current_tool.status != "on":
+                                print(current_tool.chan.voltage)
+                                current_tool.turn_on()
+                        elif current_tool.chan.voltage < current_tool.amp_trigger and current_tool.status == "on":
+                            if cycles >= review_cycles:
+                                print(current_tool.chan.voltage)
+                                current_tool.spindown()
+                                cycles = 0
+                            else:
+                                cycles = cycles + 1
+        # run through all the tools to see if they are on
+        shop_manager()
     
 
 pygame.quit()
