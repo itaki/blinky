@@ -46,7 +46,7 @@ class Gate:
         # send minimum to gate
         self.status = 1
 
-class Gate_Manager:
+class Gate_manager:
     gates: dict
     gates_file: str
     changed = False
@@ -598,7 +598,7 @@ def main_menu(gm):
         sys.exit()
 
 def main():
-    gm = Gate_Manager(gates_file, backup_dir)
+    gm = Gate_manager(gates_file, backup_dir)
     print(f'LOADING GATES from {gm.gates_file} ')
     gm.view_gates_compact()
     while True:
