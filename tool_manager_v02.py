@@ -15,9 +15,9 @@ backup_dir = '_BU'
 on_led_color = 255
 spindown_led_color = 128
 off_led_color = 10
-on_rgb_color = {'on_color' : (.51, .9, 0), 'off_color' : (.6, 1, .1)}
-spindown_rgb_color = {'on_color' : (1, .59 , 0), 'off_color' : (0, 0, 0)}
-off_rgb_color = {'on_color' : (.1, .82, .90), 'off_color' : (.1, .82, .90)}
+on_rgb_color = {'bright' : (.51, .9, 0), 'dark' : (.6, 1, .1)}
+spindown_rgb_color = {'bright' : (1, .59 , 0), 'dark' : (0, 0, 0)}
+off_rgb_color = {'bright' : (.1, .82, .90), 'dark' : (.1, .82, .90)}
 
 class Tool:
     ''' Tool class that holds all the variables associated to the tool 
@@ -150,26 +150,14 @@ class Tool:
                 self.led.off
         print(f'----------->{self.name} turned OFF')
 
-class Tool_manager:
-    def __init__(self) -> None:
-        pass
-
-class RGB_highlight:
-    def __init__(self, pin) -> object:
-        self.pin = pin
-        self.off_color = off_led_color
-        self.on_color = on_led_color
-        self.spindown_color = spindown_led_color
-
-
 class Button_LED:
     def __init__(self,
                 pin = -1,
                 ):
         self.led = LED(pin)
-        self.on_color = on_led_color,
-        self.spindown_color = spindown_led_color,
-        self.off_color = off_led_color,
+        self.on_color = on_led_color
+        self.spindown_color = spindown_led_color
+        self.off_color = off_led_color
     def turn_on(self):
         self.led.on # maybe later do a color value
     def turn_off(self):
@@ -191,4 +179,22 @@ class Button_RGB:
         self.spindown_color = spindown_rgb_color
         self.off_color = off_rgb_color
     def turn_on(self):
-        self.
+        self.led.pulse(fade_in_time = 1, 
+                        fade_out_time = 1, 
+                        on_color = self.on_color['bright'], 
+                        off_color = self.on_color['dark'], 
+                        n = None, 
+                        background = True)
+        self.led.pulse(fade_in_time = 1, 
+                        fade_out_time = 1, 
+                        on_color = self.spindown_color['bright'], 
+                        off_color = self.spindown_color['dark'], 
+                        n = None, 
+                        background = True)
+    def turn_off(self):
+        self.led.color = self.off_color('bright')
+
+class Tool_manager:
+    def __init__(self) -> None:
+        pass
+
