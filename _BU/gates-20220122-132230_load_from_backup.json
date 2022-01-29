@@ -1,15 +1,5 @@
 [
     {
-        "name": "T",
-        "number": 0,
-        "location": "tablesaw",
-        "status": 1,
-        "pin": 0,
-        "min": 51,
-        "max": 129,
-        "info": ""
-    },
-    {
         "name": "H",
         "number": 1,
         "location": "hose",
@@ -71,13 +61,13 @@
     },
     {
         "name": "B",
-        "number": 7,
-        "location": "bandsaw",
-        "status": 1,
-        "pin": 7,
-        "min": 62,
-        "max": 136,
-        "info": ""
+        "number": 12,
+        "location": "broken",
+        "status": false,
+        "pin": 15,
+        "min": 50,
+        "max": 130,
+        "info": "just a test gate"
     },
     {
         "name": "S",
@@ -110,13 +100,13 @@
         "info": ""
     },
     {
-        "name": "u",
-        "number": 11,
-        "location": "planer",
-        "status": 1,
-        "pin": 11,
-        "min": 55,
-        "max": 164,
-        "info": ""
+        "name": "T",
+        "number": 12,
+        "location": "another test",
+        "status": false,
+        "pin": 14,
+        "min": 70,
+        "max": 90,
+        "info": "info"
     }
 ]

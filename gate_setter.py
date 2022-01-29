@@ -158,7 +158,7 @@ class Gate_Setter:
 
 
 def main():
-    pass
+    curses.wrapper(Gate_Setter, 
 
 
 

@@ -5,6 +5,9 @@ import digitalio
 from adafruit_mcp230xx.mcp23017 import MCP23017
 from gpiozero import PWMLED
 
+
+# this won't work until MCO23017 gets added to the gpiozero library
+# https://github.com/gpiozero/gpiozero/pull/651
 # Initialize the I2C bus:
 i2c = busio.I2C(board.SCL, board.SDA)
 

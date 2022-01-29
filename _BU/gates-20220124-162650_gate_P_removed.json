@@ -1,6 +1,6 @@
 [
     {
-        "name": "MiterLeft",
+        "name": "ML",
         "number": 4,
         "location": "mitersaw_left",
         "status": 1,
@@ -10,7 +10,7 @@
         "info": ""
     },
     {
-        "name": "MS",
+        "name": "M",
         "number": 2,
         "location": "mitersaw",
         "status": 1,
@@ -30,7 +30,7 @@
         "info": ""
     },
     {
-        "name": "FS",
+        "name": "F",
         "number": 3,
         "location": "floorsweep",
         "status": 1,
@@ -43,7 +43,7 @@
         "name": "B",
         "number": 12,
         "location": "broken",
-        "status": 1,
+        "status": false,
         "pin": 15,
         "min": 50,
         "max": 130,
@@ -53,8 +53,8 @@
         "name": "T",
         "number": 12,
         "location": "another test",
-        "status": 1,
-        "pin": 0,
+        "status": false,
+        "pin": 14,
         "min": 70,
         "max": 90,
         "info": "info"
@@ -67,6 +67,46 @@
         "pin": 6,
         "min": 36,
         "max": 154,
+        "info": ""
+    },
+    {
+        "name": "H",
+        "number": 1,
+        "location": "hose",
+        "status": 1,
+        "pin": 1,
+        "min": 59,
+        "max": 139,
+        "info": ""
+    },
+    {
+        "name": "S",
+        "number": 8,
+        "location": "sandingtable",
+        "status": 1,
+        "pin": 8,
+        "min": 61,
+        "max": 141,
+        "info": ""
+    },
+    {
+        "name": "J",
+        "number": 9,
+        "location": "jointer",
+        "status": 1,
+        "pin": 9,
+        "min": 57,
+        "max": 138,
+        "info": ""
+    },
+    {
+        "name": "P",
+        "number": 10,
+        "location": "planer",
+        "status": 1,
+        "pin": 10,
+        "min": 49,
+        "max": 162,
         "info": ""
     }
 ]

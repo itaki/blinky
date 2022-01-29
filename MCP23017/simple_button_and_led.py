@@ -1,8 +1,9 @@
-from time import sleep
+import time
 import board
 import busio
 import digitalio
 from adafruit_mcp230xx.mcp23017 import MCP23017
+import gpiozero
 
 # Initialize the I2C bus:
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -22,6 +23,7 @@ mcp = MCP23017(i2c)  # MCP23017
 pin0 = mcp.get_pin(0)
 pin1 = mcp.get_pin(1)
 
+#red = gpiozero.PWMLED(pin0)
 # Setup pin0 as an output that's at a high logic level.
 pin0.switch_to_output(value=True)
 
@@ -30,15 +32,21 @@ pin0.switch_to_output(value=True)
 pin1.direction = digitalio.Direction.INPUT
 pin1.pull = digitalio.Pull.UP
 
-# Now loop blinking the pin 0 output and reading the state of pin 1 input.
-
+    # Now loop blinking the pin 0 output and reading the state of pin 1 input.
 while True:
-    # pin0.value = not pin1.value
-    while True:
-        pin0.value = 0  # off
-        sleep(1)
-        pin0.value = 0.1  # half brightness
-        sleep(1)
-        pin0.value = 1  # full brightness
-        sleep(1)
+    # Blink pin 0 on and then off.
+    pin0.value = 1
+    time.sleep(0.5)
+    pin0.value = .5
+    time.sleep(0.5)
+    pin0.value = 0
+    time.sleep(0.5)
 
+    # Read pin 1 and print its state.
+
+    # for x in range(101):
+    #     pin0.value = x * 0.01
+    #     time.sleep(0.02)
+    # for x in range(100, -1, -1):
+    #     pin1.value = x * 0.01
+    #     time.sleep(0.02)

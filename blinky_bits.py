@@ -22,10 +22,8 @@ class Tool:
                  gate_prefs,
                  button_pin=0,
                  led_type='none',
-                 r_pin=0,
-                 g_pin=0,
-                 b_pin=0,
-                 voltage_pin=12,
+                 led_pins=[],
+                 voltage_pin=[],
                  amp_trigger=10,
                  keyboard_key=0,
                  last_used=0,
@@ -38,9 +36,7 @@ class Tool:
         self.gate_prefs = gate_prefs
         self.button_pin = button_pin
         self.led_type = led_type
-        self.r_pin = r_pin
-        self.g_pin = g_pin
-        self.b_pin = b_pin
+        self.led_pins = led_pins
         self.voltage_pin = voltage_pin
         self.amp_trigger = amp_trigger
         self.keyboard_key = keyboard_key
@@ -156,9 +152,7 @@ def get_tools(file = 'tools.json'):
                 tool['gate_prefs'],
                 tool['button_pin'],
                 tool['led_type'],
-                tool['r_pin'],
-                tool['g_pin'],
-                tool['b_pin'],
+                tool['led_pins'],
                 tool['voltage_pin'],
                 tool['amp_trigger'],
                 tool['keyboard_key'],

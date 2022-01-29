@@ -7,12 +7,15 @@ import board
 import busio
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
+from volt import Voltage_sensor
+from gate_manager import Gate_manager
 
 # from os.path import dirname, join
 
 # create some list of shit I got
 tools_file = 'tools.json'
 gates_file = 'gates.json'
+backup_dir = 'BU/'
 #tools_file = 'tools_large_number.json'
 #gates_file = 'gates_large_number.json'
 tools = blinky_bits.get_tools(tools_file)
@@ -24,16 +27,18 @@ num_of_gates = len(gates)
 
 use_gui = True
 use_buttons = False
-use_voltage = False
+use_voltage = True
+use_collector = True
+collector_pin = 21
 
 if use_gui: 
     '''intitalizes pygame canvas'''
     pygame.init()
 
     screen_width = 400
-    screen_height = 480
+    screen_height = 440
     screen = pygame.display.set_mode((screen_width, screen_height))
-    pygame.display.set_caption('BLINKY')
+    pygame.display.set_caption('R.U.D.I the ShopBot')
 
     gates_width = 60
     terminal_height = 40
@@ -51,15 +56,14 @@ if use_gui:
     clicked = False
 
 if use_voltage:
-    '''this activates the ADS1115 and talks to the AC715'''
+    '''this activates the ADS1x15s and talks to the AC715s'''
     # Create the I2C bus
     i2c = busio.I2C(board.SCL, board.SDA)
-
-    # Create the ADC object using the I2C bus
-    ads = ADS.ADS1115(i2c)
-
+    start_address = 72 # ADS11x5s start at 72 or 0x48
+    max_volt_meters = 4 # there can only be a max of 4 ADS1x15s 
     cycles = 0 # sets the number of cycles to 0
     review_cycles = 6 # number of cycles the voltage has to drop below the trigger to confirm the tool is off
+
 
 
 
@@ -72,77 +76,29 @@ class Dust_collector:
         self.status = 'off'
         self.last_spin_up = time.time()
         self.min_uptime = min_uptime
+        self.relay_pin = collector_pin
 
-        # turn off dusty relay pin
+        # turn off rosie relay pin
 
     def spinup(self):
-        if self.status == 'on':  # dusty is currently on
-            print('dusty is currently on')
+        if self.status == 'on':  # rosie is currently on
+            print('rosie is currently on')
 
         elif self.status == 'off':
-            print('dusty was OFF and being turned on')
+            print('rosie was OFF and being turned on')
             self.status = 'on'
-            # turn dustys relay pin on
+            # turn rosies relay pin on
             self.last_spin_up = time.time()
 
     def shutdown(self):
         if self.status != 'off':
             self.status = 'off'
-            # turn off dusty relay pin
-            print("============dusty in now turned off==================")
+            # turn off rosie relay pin
+            print("============rosie in now turned off==================")
 
     def uptime(self):
         uptime = time.time() - self.last_spin_up
         return uptime
-
-
-class Gate_manager:
-    def __init__(self):
-        pass
-
-    def close_all_gates(self):
-        for gate in gates:
-            gates[gate].close()
-
-    def open_all_gates(self):
-        for gate in gates:
-            gates[gate].open()
-
-    def get_gate_settings(self):
-        gate_settings = []
-        for i in range(num_of_gates):
-            gate_settings.append(1)
-        for tool in tools:
-            current_tool = tools[tool]
-            if current_tool.status != 'off':
-                print(current_tool.name, current_tool.id_num,
-                      current_tool.gate_prefs)
-                i = 0
-                for pref in current_tool.gate_prefs:
-                    # print(f'{pref} at index {i}')
-                    if pref == 0:
-                        gate_settings[i] = 0
-                    i += 1
-        print(f'New Gate Settings {gate_settings}')
-        return gate_settings
-
-    def set_gates(self, gate_settings):
-
-        # if all gates are closed emergency shutdown
-        result = all(setting == 1 for setting in gate_settings)
-        if (result):
-            dusty.shutdown()
-            print('ALL GATES ARE CLOSED - MAKING SURE DUSTY IS SHUT DOWN')
-        i = 0
-        for gate in gates:
-            current_gate = gates[gate]
-            # print(gate_settings[i])
-            if gate_settings[i] != 1:
-                current_gate.open()
-            else:
-                current_gate.close()
-            # print(f'{gates[gate].name} set to {gates[gate].status}')
-            i += 1
 
 
 class Button_PG_gate():
@@ -384,12 +340,11 @@ class Button_PG_tool():
         return action
 
 
-class Error():
+class Error(): # also know as Uniblab
     def __init__(self, name, time_stanp, error):
         self.object =  name
         self.time_stanp = time_stanp
         self.error = error
-
 
 
 def create_tool_gui_buttons():
@@ -444,9 +399,8 @@ def create_real_buttons():
 def create_voltage_switchs():
     for tool in tools:
         current_tool = tools[tool]
-        if current_tool.voltage_pin != 0:
-            pin = current_tool.voltage_pin
-            current_tool.chan = AnalogIn(ads, ADS.P0)
+        if current_tool.voltage_pin != []:
+            current_tool.voltage_sensor = Voltage_sensor((current_tool.voltage_pin[0]), current_tool.voltage_pin[1], current_tool.amp_trigger)
 
 
 def tools_in_use():
@@ -479,6 +433,17 @@ def keyboard_manager(key):
 
 def info_window():
     pass
+
+def get_gate_settings(tools):
+    open_gates = []
+    for t in tools:
+        current_tool = tools[t]
+        if current_tool.status != 'off':
+            for gate_pref in current_tool.gate_prefs:
+                if gate_pref not in open_gates:
+                    open_gates.append(gate_pref)
+    return open_gates
+
     
 def shop_manager():
     '''the shop manager takes the tools list and checks each one to see what it needs to do'''
@@ -488,8 +453,8 @@ def shop_manager():
         
             if current_tool.status == 'on':
                 if current_tool.spin_down_time >= 0:
-                    dusty.spinup()
-                gate_settings = gatekeeper.get_gate_settings()
+                    rosie.spinup()
+                gate_settings = get_gate_settings(tools) ## this need to be a shop_manger method that talks to tools and then tells gatekeeper what to do
                 gatekeeper.set_gates(gate_settings)
                 current_tool.flagged = False
                 if current_tool.spin_down_time < 0: #use -1 to not turn tool on at all
@@ -497,21 +462,21 @@ def shop_manager():
 
         
             elif current_tool.status == 'off':
-                gate_settings = gatekeeper.get_gate_settings() 
+                opengates = get_gate_settings(tools) 
                 tools_on = tools_in_use()
                 if tools_on: 
                     print(f'there are tools in use {tools_on}')
-                    gatekeeper.set_gates(gate_settings)                  
+                    gatekeeper.set_gates(opengates)                  
                 else:
                     print(f'there are NO tools in use ')        #check to see if any tools are on
-                    dusty.shutdown()
+                    rosie.shutdown()
                 current_tool.flagged = False
         
         if current_tool.status == 'spindown':
-            uptime = dusty.uptime()
+            uptime = rosie.uptime()
             purge_time = time.time() - current_tool.last_used
-            if uptime < dusty.min_uptime:
-                # print (f'dustys min uptime is {dusty.min_uptime} but has only been on for {uptime}. WAITING...')
+            if uptime < rosie.min_uptime:
+                # print (f'rosies min uptime is {rosie.min_uptime} but has only been on for {uptime}. WAITING...')
                 pass            
             elif purge_time > current_tool.spin_down_time:
                 current_tool.turn_off()
@@ -520,8 +485,8 @@ def shop_manager():
 # START APP HERE
 ################################################################################
 min_uptime = 5 #smallest amount of time the dust collector can be on for
-dusty = Dust_collector('off', time.time(), min_uptime)  # create the dust collector
-gatekeeper = Gate_manager() # create the gate manager
+rosie = Dust_collector('off', time.time(), min_uptime)  # create the dust collector
+gatekeeper = Gate_manager(gates_file, backup_dir) # create the gate manager
 #tools['CloseAll'].status = "on"
 #tools['CloseAll'].flagged = True
 
@@ -559,22 +524,17 @@ if __name__ == '__main__':
 
         if use_voltage:
             for tool in tools:
-                current_tool = tools[tool]
-                if current_tool.override == False:
-                    if current_tool.voltage_pin != 0: # only check for tools that are on the amp trigger
-                        
-                        if current_tool.chan.voltage >= current_tool.amp_trigger:
-                            cycles = 0
-                            if current_tool.status != "on":
-                                print(current_tool.chan.voltage)
-                                current_tool.turn_on()
-                        elif current_tool.chan.voltage < current_tool.amp_trigger and current_tool.status == "on":
-                            if cycles >= review_cycles:
-                                print(current_tool.chan.voltage)
-                                current_tool.spindown()
-                                cycles = 0
-                            else:
-                                cycles = cycles + 1
+                if tools[tool].override == False:
+                    if tools[tool].voltage_pin != []: # only check for tools that are on the amp trigger
+                        am_i_on = tools[tool].voltage_sensor.am_i_on()
+                        if am_i_on and tools[tool].status != 'on':
+                            tools[tool].turn_on()
+                        elif not am_i_on and tools[tool].status == 'on':
+                            tools[tool].spindown()
+
+
+
+
         # run through all the tools to see if they are on
         shop_manager()
     

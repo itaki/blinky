@@ -1,0 +1,17 @@
+{   
+    "type": "button",
+    "colors": {
+        "off": {
+            "col": "#19d1e5",
+            "high": "#29e1e6"
+        },
+        "on"
+    }
+}
+off_col = ''
+    off_col_h = '#29e1e6'
+    on_col = '#81f900'
+    on_col_h = '#82f102'
+    error_col = '#ff3f4f'
+    error_col_h = '#ff4050'
+    text_col = '#16171d'

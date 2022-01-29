@@ -59,8 +59,9 @@ class Gate_manager:
 
     def select_gates_file(self):
         files = os.listdir(self.backup_dir)
+        files.append("Keep Files")
         files.reverse()
-        print (files)
+        #print (files)
         selected_file = q.select("Which file would you like to restore? Top is newest",
                     choices = files, 
                     default=None, 
@@ -73,7 +74,7 @@ class Gate_manager:
                     use_jk_keys=True, 
                     show_selected=True, 
                     instruction=None,).ask()
-        selected_file = backup_dir+'/'+selected_file
+        
         return selected_file
     
     def load_gates(self, gates_file = gates_file): 
@@ -156,6 +157,9 @@ class Gate_manager:
         print(f"Current name is {my_gate.name}")
         print("Depending on the size of the gate button, the name should be very short. One to 3 charaters.")
         new_name = q.text("What name would you like to use?", style = style).ask()
+        if new_name == '':
+            print("Can't be empty, please give your gate a name")
+            self.set_gate_name(gate_key)
         if new_name == 'new':
             print("Cannon use 'new' as name, please choose another?")
             self.set_gate_name(gate_key)
@@ -178,14 +182,15 @@ class Gate_manager:
             return False
 
     def set_gate_pin(self, gate_key):
-        #my_gate = self.gates[gate_key]
+        my_gate = self.gates[gate_key]
         # get requested pin
+        print(f"Gate is currently listed as {my_gate['pin']}")
         requested_pin = int(q.text("What pin is the gate on? (0 - 15)", style = style).ask())
         if 0 <= requested_pin <= 15:
             if len(self.gates) != 0:
                 for g in self.gates:
                     s_gate = self.gates[g]
-                    if requested_pin == s_gate.pin:
+                    if requested_pin == s_gate.pin and requested_pin != my_gate['pin']:
                         print(f"{requested_pin} already used by gate {s_gate.name} at {s_gate.location}. Double check your gates. 'q' to quit.") 
                         self.set_gate_pin(gate_key)
             self.gates[gate_key].pin = int(requested_pin)
@@ -259,10 +264,13 @@ class Gate_manager:
         if new_location != 'q':
             self.gates[gate_key].location = new_location
             return True
+        elif new_location != None:
+            return True
         else:
-            return False
+            print (f"You must provide a location")
+            self.set_location(gate_key)
     
-    def set_all_gates(self):
+    def set_all_gates_angles(self):
         for g in self.gates:
             if not self.set_min(g):
                 return False
@@ -270,7 +278,7 @@ class Gate_manager:
                 return False
         return True
 
-    def set_gate(self, stdscr, gate_key, side):
+    def set_gate_angle(self, stdscr, gate_key, side):
 
         """ CURSES function so nees wrapping, create interface to adjust the gate"""
 
@@ -410,7 +418,7 @@ class Gate_manager:
             key = stdscr.getkey()
 
     def set_min(self, gate_key):
-        gate_min = curses.wrapper(self.set_gate, gate_key, 'min')
+        gate_min = curses.wrapper(self.set_gate_angle, gate_key, 'min')
         if gate_min != -1:
             self.gates[gate_key].min = gate_min
             return True
@@ -419,7 +427,7 @@ class Gate_manager:
             return False
     
     def set_max(self, gate_key):
-        gate_max = curses.wrapper(self.set_gate, gate_key, 'max')
+        gate_max = curses.wrapper(self.set_gate_angle, gate_key, 'max')
         if gate_max != -1:
             self.gates[gate_key].max = gate_max
             return True
@@ -458,7 +466,7 @@ class Gate_manager:
         new_gate_object = Gate(
             'new',
             number,
-            'unset',
+            None,
             False,
             None,
             85,
@@ -491,7 +499,7 @@ class Gate_manager:
 
     def select_gate(self):
         gates_list = list ( self.gates.keys())
-        gate_key = q.select("Which gate would you like to delete?",
+        gate_key = q.select("Select gate:",
                     choices = gates_list, 
                     default=None, 
                     qmark='?', 
@@ -504,6 +512,38 @@ class Gate_manager:
                     show_selected=True, 
                     instruction=None,).ask()
         return (gate_key)
+    
+    def open_gates(self):
+        gates_list = list ( self.gates.keys())
+        for g in gates_list:
+            self.open_gate(g)
+
+    def open_gate(self, gate_key):
+        my_gate = self.gates[gate_key]
+        kit.servo[my_gate.pin].angle = my_gate.max
+
+    def close_gates(self):
+        gates_list = list ( self.gates.keys())
+        for g in gates_list:
+            self.close_gate(g)
+
+    def close_gate(self, gate_key):
+        my_gate = self.gates[gate_key]
+        kit.servo[my_gate.pin].angle = my_gate.min
+    
+    def set_gates(self, open_gates):
+        '''Takes a list of gates that need to be open and opens them while making sure the rest are closed'''
+        for g in self.gates:
+            current_gate = self.gates[g]
+            if current_gate.name in open_gates:
+                self.open_gate(g)
+            else:
+                self.close_gate(g)
+
+    
+
+
+
 
 def main_menu(gm):
     print("---------MAIN MENU----------")
@@ -540,8 +580,13 @@ def main_menu(gm):
     
     elif action == "load gates":
         selected_file = gm.select_gates_file()
-        gm.load_gates(selected_file)
-        gm.write_gates('load_from_backup')
+        print(f"SELECTED GATES FILE {selected_file}")
+        if selected_file == "Keep Files":
+            print("No gates loaded")
+        else:
+            selected_file = backup_dir+'/'+selected_file
+            gm.load_gates(selected_file)
+            gm.write_gates('load_from_backup')
     
     elif action == "clear all gates":
         if gm.clear_gates():
@@ -565,7 +610,7 @@ def main_menu(gm):
 
     
     elif action == "set all gates - min & max":
-        if gm.set_all_gates():
+        if gm.set_all_gates_angles():
             print("All Gates Set")
         else:
             print("Only a few gates set")
@@ -573,7 +618,7 @@ def main_menu(gm):
     
     elif action == 'modify gate':
         gate_key = gm.select_gate()
-        if gm.modify_gate == True:
+        if gm.modify_gate(gate_key) == True:
             print(f"Gate {gate_key} Modified")
             gm.write_gates(f"gate_{gate_key}_modified")
 
@@ -591,11 +636,14 @@ def main_menu(gm):
         gate_key = gm.select_gate()
         gm.identify_gate(gate_key)
     elif action == "open all gates":
-        pass
+        gm.open_gates()
+
     elif action == "close all gates":
         pass
     elif action == "quit":
         sys.exit()
+
+    
 
 def main():
     gm = Gate_manager(gates_file, backup_dir)
