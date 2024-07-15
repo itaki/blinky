@@ -488,7 +488,7 @@ if __name__ == '__main__':
                 if gate_buttons[gate].draw_button():
                     pass
             for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
+                if event.type == pygame.KEYDOWN:                                                                                                                                                                                                                   
                     keyboard_manager(event.key)
                 elif event.type == pygame.QUIT:
                     run = False        
@@ -513,3 +513,4 @@ if __name__ == '__main__':
     
 
 pygame.quit()
+ 

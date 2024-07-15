@@ -37,12 +37,12 @@ class Voltage_sensor:
     https://learn.adafruit.com/adafruit-4-channel-adc-breakouts/assembly-and-wiring
 
     '''
-    def __init__(self, volt, sensor_detection_threshhold = 1.6, trigger = 1.09, min_readings = 10 ) -> None:
+    def __init__(self, volt, sensor_detection_threshhold = 1.6, error_threshhold = 2.7, min_readings = 10 ) -> None:
         self.board_address = volt['voltage_address']['board_address'] # The voltage address comes in 2 parts. Board address
         self.pin_number = ads_pin_numbers[volt['voltage_address']['pin']] # and pin number
         self.sensor_detection_threshhold = sensor_detection_threshhold # value at which it doesn't see a sensor
+        self.error_threshhold = error_threshhold #
         self.sensor_exists = True # this gets set to false if 
-        self.trigger = trigger
         self.min_readings = min_readings
         self.readings = []
         self.error_raised = False
@@ -58,37 +58,29 @@ class Voltage_sensor:
             print(f"■■■■■ ERROR! ■■■■■■  ADS11x5 not found at {hex(self.board_address)}. Cannot create voltage sensor")
             self.board_exists = False
 
-    def set_trigger_voltage(self):
-        reading = self.get_reading()   
-        if self.in_good_range():
-            self.trigger = reading * self.trigger
-            print (f"Setting trigger point on pin {self.pin_number} at address {hex(self.board_address)} to {self.trigger}")
+
 
     def get_reading(self):
         '''gets a new reading and appends to readings list.
         if the list is full, removes the first reading in the list.
         returns the max value of the readings list'''
         if self.board_exists:
-            try:
-                reading = self.chan.voltage # get reading
-                self.readings.append(reading) # append readings to readings list
-                if len(self.readings) <= self.min_readings: # Make sure the list of readings has enough readings
-                    self.get_reading()
-                else:      
-                    self.readings.pop(0) # pop off the first reading to keep it tidy
-                max_reading = max(self.readings) # Just hold onto the max reading
-                self.reading = max_reading
-                return max_reading
-            except:
-                print(f"ERROR GETTING READING FROM {self.board_address} at PIN {self.pin_number}")
-                return self.reading
+            reading = self.chan.voltage # get reading
+            self.readings.append(reading) # append readings to readings list
+            if len(self.readings) <= self.min_readings: # Make sure the list of readings has enough readings
+                self.get_reading()
+            else:      
+                self.readings.pop(0) # pop off the first reading to keep it tidy
+            max_reading = max(self.readings) # Just hold onto the max reading
+            self.reading = max_reading
+            return max_reading
         else:
             return 0
 
     def in_good_range(self):
         '''Checks to see if the reading is in a good range'''
 
-        if self.sensor_detection_threshhold < self.reading:
+        if self.sensor_detection_threshhold < self.reading < self.error_threshhold:
             self.error_raised = False
             self.sensor_exists = True
             return True
@@ -96,18 +88,18 @@ class Voltage_sensor:
             self.error_raised = True
             if self.sensor_detection_threshhold > self.reading:
                 print (f"⛔⛔⛔⛔ CAUTION!!!!!   It looks as though there is no sensor on pin {self.pin_number} at address {hex(self.board_address)} ")
+            if self.reading > self.error_threshhold:
+                print (f"⛔⛔⛔⛔ CAUTION!!!!!  There is a problem with the sensor on pin {self.pin_number} at address {hex(self.board_address)} ")
         self.sensor_exists = False
         return False
 
     def am_i_on(self):
-        '''This is the main method of this class
-        answers the question of whether or not the plug has current being drawn from it'''
+        '''answers the question of whether or not the plug has current being drawn from it'''
         # If the ADS1115 was never found, it was never created, so skip this entirely 
         if self.board_exists:
             reading = self.get_reading()
             if self.in_good_range() and self.sensor_exists:
                 if reading > self.trigger: # I am on
-                    print(reading)
                     return True
                 else:
                     return False # I am not on
@@ -122,7 +114,11 @@ class Voltage_sensor:
         else:
             return False
 
-    
+    def set_trigger_voltage(self):
+        reading = self.get_reading()   
+        if self.in_good_range():
+            self.trigger = reading * 1.003
+            print (f"Setting trigger point on pin {self.pin_number} at address {hex(self.board_address)} to {self.trigger}")
 
 
 

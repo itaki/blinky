@@ -21,6 +21,7 @@ import get_full_path
 import adafruit_pca9685
 i2c = busio.I2C(board.SCL, board.SDA)
 from adafruit_servokit import ServoKit
+kit = ServoKit(channels=16)
 ### hat = adafruit_pca9685.PCA9685(i2c) Put this in the application
 GATES_FILE = "gates.json"
 BACKUP_DIR = "_BU"
@@ -66,9 +67,9 @@ class Gate_Manager:
                 gate['info']
             )
             if self.gates[gate['name']].set_servo(): # if it can set a servo, meaning the address is valid at gate
-                print(f"SUCCESS {gate} ")
+                print(f"✅ SUCCESS {gate} ")
             else:
-                print(f"REMOVED {gate} ")
+                print(f"❌ REMOVED {gate} ")
                 self.gates.pop(gate['name'])
 
     def select_gates_file(self):
@@ -125,7 +126,7 @@ class Gate_Manager:
         else:
             for gate in self.gates:
                 s_gate = self.gates[gate]
-                print (f"Gate {s_gate.name} at {s_gate.location} on pin {s_gate.pin} min:{s_gate.min} | max:{s_gate.max} -- {s_gate.info}")
+                print (f"Gate {s_gate.name} at {s_gate.physical_location} on pin {s_gate.io_location['pin']} min:{s_gate.min} | max:{s_gate.max} -- {s_gate.info}")
             return False
                 
     def clear_gates(self):
@@ -196,7 +197,7 @@ class Gate_Manager:
         stdscr.nodelay(True)
 
         #create the strings
-        info = f"Currently identifying GATE {my_gate.name} at {my_gate.location}"
+        info = f"Currently identifying GATE {my_gate.name} at {my_gate.physical_location}"
         instructions = "'q' to quit"
         #calculate position
         info_x = bb.center_x(width, info)
@@ -220,12 +221,12 @@ class Gate_Manager:
                 #stdscr.addstr("It's working")
                 if increase == True:
                     angle = angle +1
-                    kit.servo[my_gate.pin].angle = angle
+                    kit.servo[my_gate.io_location['pin']].angle = angle
                     if angle >= 110:
                         increase = False
                 else:
                     angle = angle - 1
-                    kit.servo[my_gate.pin].angle = angle
+                    kit.servo[my_gate.io_location['pin']].angle = angle
                     if angle <= 70:
                         increase = True
                 stdscr.addstr(cent_y, cent_x, str(angle))
@@ -268,7 +269,7 @@ class Gate_Manager:
         """ CURSES function so nees wrapping, create interface to adjust the gate"""
 
         my_gate = self.gates[gate_key]
-        pin = my_gate.pin
+        pin = my_gate.io_location['pin']
         key = None
         adjustment = 0
         flagged = True
@@ -338,7 +339,7 @@ class Gate_Manager:
                 kit.servo[pin].angle = angle
 
             # Declaration of strings
-            title = f"Set {side} for gate {my_gate.name} at {my_gate.location} on pin {my_gate.pin}"[:width-1]
+            title = f"Set {side} for gate {my_gate.name} at {my_gate.location} on pin {my_gate.io_location['pin']}"[:width-1]
             instructions = "Use arrow keys  :  '0' to recenter  :  'q' to quit  :  's' to save"[:width-1]
             angle_reading = f"Angle: {angle}"[:width-1]
             if too_low:
@@ -483,20 +484,22 @@ class Gate_Manager:
         return True
 
     def select_gate(self):
-        gates_list = list ( self.gates.keys())
-        gate_key = q.select("Select gate:",
-                    choices = gates_list, 
-                    default=None, 
-                    qmark='?', 
-                    pointer='»', 
-                    style=style, 
-                    use_shortcuts=False, 
-                    use_arrow_keys=True, 
-                    use_indicator=True, 
-                    use_jk_keys=True, 
-                    show_selected=True, 
-                    instruction=None,).ask()
-        return (gate_key)
+        gates_list = list(self.gates.keys())
+        gates_list.append("Quit")  # Add a Quit option to the list
+        gate_key = q.select("Select gate or quit:",
+                            choices=gates_list, 
+                            default=None, 
+                            qmark='?', 
+                            pointer='»', 
+                            style=style, 
+                            use_shortcuts=False, 
+                            use_arrow_keys=True, 
+                            use_indicator=True, 
+                            use_jk_keys=True, 
+                            show_selected=True, 
+                            instruction=None).ask()
+        return gate_key
+
     
     def open_gates(self):
         gates_list = list ( self.gates.keys())
@@ -506,7 +509,6 @@ class Gate_Manager:
     def open_gate(self, gate_key):
         my_gate = self.gates[gate_key]
         self.gates[gate_key].location.angle = my_gate.max
-        print("I should change the status")
         my_gate.status = 0
 
     def close_gates(self):
@@ -531,110 +533,134 @@ class Gate_Manager:
                 self.close_gate(g)
                 print(f'CLOSEING gate {current_gate.name} status = {current_gate.status}')
                 
+def gate_actions_menu(gm):
+    while True:
+        gate_key = gm.select_gate()
+        if gate_key == "Quit":
+            break  # Break the loop to return to the main menu
 
+        action_choices = {
+            "Identify gate": gm.identify_gate,
+            "Modify gate": gm.modify_gate,
+            "Remove gate": gm.remove_gate,
+            "Open gate": gm.open_gate,
+            "Close gate": gm.close_gate,
+            "Set min/max": lambda x: gm.set_gate_angle(x, 'both'),  # Example lambda for setting both
+            "Quit to Main Menu": None  # Placeholder for quitting
+        }
 
-    
+        print("Select an action for the gate:")
+        action = q.select("Choose an action:",
+                          choices=list(action_choices.keys()),
+                          default=None,
+                          qmark='?',
+                          pointer='»',
+                          style=style,
+                          use_shortcuts=True,
+                          use_arrow_keys=True,
+                          use_indicator=True,
+                          use_jk_keys=True,
+                          show_selected=True,
+                          instruction=None).ask()
 
+        if action == "Quit to Main Menu":
+            break
 
-
+        if action_choices[action]:
+            action_choices[action](gate_key)
 
 def main_menu(gm):
-    print("---------MAIN MENU----------")
-    choices = ("view gates : compact",
-                "view gates : extended", 
-                "load gates", 
-                "clear all gates", 
-                "add gate", 
-                "reorder gates", 
-                "set all gates - min & max",
-                "modify gate",
-                "remove gate",
-                "identify gate",
-                "open all gates",
-                "close all gates",
-                "quit" )
-    action = q.select("What do you want to do?",
-                    choices = choices, 
-                    default=None, 
-                    qmark='?', 
-                    pointer='»', 
-                    style=style, 
-                    use_shortcuts=True, 
-                    use_arrow_keys=True, 
-                    use_indicator=True, 
-                    use_jk_keys=True, 
-                    show_selected=True, 
-                    instruction=None,).ask()
-    if action == "view gates : compact":
-        gm.view_gates_compact()
-    
-    elif action == "view gates : extended":
-        gm.view_gates()
-    
-    elif action == "load gates":
-        selected_file = gm.select_gates_file()
-        print(f"SELECTED GATES FILE {selected_file}")
-        if selected_file == "Keep Files":
-            print("No gates loaded")
-        else:
-            selected_file = BACKUP_DIR+'/'+selected_file
-            gm.load_gates(selected_file)
-            gm.write_gates('load_from_backup')
-    
-    elif action == "clear all gates":
-        if gm.clear_gates():
-            gm.write_gates('clear_all')
-        else:
-            print ("Gates not cleared")
-    
-    elif action == "add gate":
-        if gm.add_new_gate():
-            print (f"Gate added")
-            gm.write_gates('gate_added')
-        else:
-            print ("Gate not added")
-    
-    elif action == "reorder gates":
-        reodered_gates = reorder_dict.reorder(gm.gates)
-        gm.gates = reodered_gates
-        print("Gates reordered")
-        gm.view_gates_compact()
-        gm.write_gates(f"reordered")
+    while True:  # This loop will keep running until a break condition is met
+        print("---------MAIN MENU----------")
+        choices = (
+            "view gates : compact",
+            "view gates : extended",
+            "load gates",
+            "clear all gates",
+            "add gate",
+            "reorder gates",
+            "set all gates - min & max",
+            "modify gate",
+            "remove gate",
+            "identify gate",
+            "open all gates",
+            "close all gates",
+            "quit"  # Option to quit
+        )
+        action = q.select("What do you want to do?",
+                          choices=choices,
+                          default=None,
+                          qmark='?',
+                          pointer='»',
+                          style=style,
+                          use_shortcuts=True,
+                          use_arrow_keys=True,
+                          use_indicator=True,
+                          use_jk_keys=True,
+                          show_selected=True,
+                          instruction=None).ask()
 
-    
-    elif action == "set all gates - min & max":
-        if gm.set_all_gates_angles():
-            print("All Gates Set")
-        else:
-            print("Only a few gates set")
-        gm.write_gates('angles_set')
-    
-    elif action == 'modify gate':
-        gate_key = gm.select_gate()
-        if gm.modify_gate(gate_key) == True:
-            print(f"Gate {gate_key} Modified")
-            gm.write_gates(f"gate_{gate_key}_modified")
+        if action == "quit":
+            print("Exiting program...")
+            break  # Exit the loop, which ends the function and thus the program
+
+        elif action == "view gates : compact":
+            gm.view_gates_compact()
+
+        elif action == "view gates : extended":
+            gm.view_gates()
+
+        elif action == "load gates":
+            selected_file = gm.select_gates_file()
+            print(f"SELECTED GATES FILE {selected_file}")
+            if selected_file != "Keep Files":
+                selected_file = BACKUP_DIR + '/' + selected_file
+                gm.load_gates(selected_file)
+                gm.write_gates('load_from_backup')
+            else:
+                print("No gates loaded")
+
+        elif action == "clear all gates":
+            if gm.clear_gates():
+                gm.write_gates('clear_all')
+            else:
+                print("Gates not cleared")
+
+        elif action == "add gate":
+            if gm.add_new_gate():
+                print("Gate added")
+                gm.write_gates('gate_added')
+            else:
+                print("Gate not added")
+
+        elif action == "reorder gates":
+            reordered_gates = reorder_dict.reorder(gm.gates)
+            gm.gates = reordered_gates
+            print("Gates reordered")
+            gm.view_gates_compact()
+            gm.write_gates("reordered")
+
+        elif action == "set all gates - min & max":
+            if gm.set_all_gates_angles():
+                print("All Gates Set")
+            else:
+                print("Only a few gates set")
+            gm.write_gates('angles_set')
+
+        elif action == 'modify gate' or action == 'remove gate' or action == 'identify gate':
+            gate_actions_menu(gm)
 
 
+        elif action == "open all gates":
+            gm.open_gates()
 
-    elif action == "remove gate":
-        gate_key = gm.select_gate()
-        if gm.remove_gate(gate_key):
-            print(f"Removed {gate_key} Gate")
-            gm.write_gates(f"gate_{gate_key}_removed")
-        else:
-            print("Gate not removed")
-    
-    elif action == "identify gate":
-        gate_key = gm.select_gate()
-        gm.identify_gate(gate_key)
-    elif action == "open all gates":
-        gm.open_gates()
+        elif action == "close all gates":
+            gm.close_gates()
 
-    elif action == "close all gates":
-        pass
-    elif action == "quit":
-        sys.exit()    
+        # Pause or a visual separator can be helpful for user experience
+        input("Press Enter to continue...")
+
+
  
 class Gate:
     def __init__(self, name, id, physical_location, status, io_location, minimum, maximum, info):
@@ -669,9 +695,7 @@ class Gate:
         # send minimum to gate
         self.status = 1
 
-
+# Main execution entry point
 if __name__ == "__main__":
     gm = Gate_Manager(GATES_FILE, BACKUP_DIR)
-    for gate in gm.gates:
-        print (gate)
-    
+    main_menu(gm)

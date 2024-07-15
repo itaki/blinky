@@ -51,8 +51,8 @@
             "address": 64,
             "pin": 3
         },
-        "min": 50,
-        "max": 130,
+        "min": 130,
+        "max": 50,
         "info": "just a test gate"
     },
     {
@@ -63,7 +63,7 @@
         "io_location": 
         {
             "address": 64,
-            "pin": 4
+            "pin": 15
         },
         "min": 60,
         "max": 120,
@@ -77,7 +77,7 @@
         "io_location": 
         {
             "address": 64,
-            "pin": 5
+            "pin": 7
         },
         "min": 60,
         "max": 120,
@@ -91,10 +91,122 @@
         "io_location": 
         {
             "address": 64,
-            "pin": 6
+            "pin": 13
         },
         "min": 60,
         "max": 120,
+        "info": ""
+    },
+    {
+        "name": "VT",
+        "id": 4,
+        "physical_location": "Vertical Tube",
+        "status": 1,
+        "io_location": 
+        {
+            "address": 64,
+            "pin": 12
+        },
+        "min": 60,
+        "max": 120,
+        "info": ""
+    },
+    {
+        "name": "IB",
+        "id": 4,
+        "physical_location": "Island Branch",
+        "status": 1,
+        "io_location": 
+        {
+            "address": 67,
+            "pin": 15
+        },
+        "min": 60,
+        "max": 120,
+        "info": ""
+    },
+    {
+        "name": "OH",
+        "id": 4,
+        "physical_location": "Island Branch Overhead",
+        "status": 1,
+        "io_location": 
+        {
+            "address": 67,
+            "pin": 12
+        },
+        "min": 60,
+        "max": 120,
+        "info": ""
+    },
+    {
+        "name": "TSH",
+        "id": 4,
+        "physical_location": "Table Saw Hood",
+        "status": 1,
+        "io_location": 
+        {
+            "address": 67,
+            "pin": 8
+        },
+        "min": 70,
+        "max": 140,
+        "info": ""
+    },
+    {
+        "name": "TS",
+        "id": 4,
+        "physical_location": "Table Saw Main",
+        "status": 1,
+        "io_location": 
+        {
+            "address": 80,
+            "pin": 0
+        },
+        "min": 60,
+        "max": 120,
+        "info": ""
+    },
+    {
+        "name": "R",
+        "id": 4,
+        "physical_location": "Router Table",
+        "status": 1,
+        "io_location": 
+        {
+            "address": 80,
+            "pin": 1
+        },
+        "min": 60,
+        "max": 120,
+        "info": ""
+    },
+    {
+        "name": "ST",
+        "id": 4,
+        "physical_location": "Sanding Table",
+        "status": 1,
+        "io_location": 
+        {
+            "address": 80,
+            "pin": 3
+        },
+        "min": 60,
+        "max": 120,
+        "info": ""
+    },
+    {
+        "name": "P",
+        "id": 423,
+        "physical_location": "Planer",
+        "status": 1,
+        "io_location": 
+        {
+            "address": 80,
+            "pin": 2
+        },
+        "min": 60,
+        "max": 150,
         "info": ""
     }
 ]

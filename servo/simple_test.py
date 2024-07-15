@@ -6,6 +6,7 @@
 
 from board import SCL, SDA
 import busio
+import time
 
 # Import the PCA9685 module.
 from adafruit_pca9685 import PCA9685
@@ -14,15 +15,39 @@ from adafruit_pca9685 import PCA9685
 i2c_bus = busio.I2C(SCL, SDA)
 
 # Create a simple PCA9685 class instance.
-pca = PCA9685(i2c_bus, address = 0x40)
+pca = PCA9685(i2c_bus, address = 0x48) 
+
+# 50 is table saw 
+# 40 is main board
 
 # Set the PWM frequency to 60hz.
 pca.frequency = 1000
 
 # Set the PWM duty cycle for channel zero to 50%. duty_cycle is 16 bits to match other PWM objects
 # but the PCA9685 will only actually give 12 bits of resolution.
-pca.channels[0].duty_cycle = 0x0000
-pca.channels[1].duty_cycle = 0x0000
-pca.channels[2].duty_cycle = 0x0000
 
-pca.channels[3].duty_cycle = 0xffff
+
+
+
+# pca.channels[1].angle = 90
+# pca.channels[7].angle = 70
+# pca.channels[11].angle = 70
+# pca.channels[15].angle = 70
+
+# pca.channels[1].angle = 150
+# pca.channels[7].angle = 150
+# pca.channels[11].angle = 150
+# pca.channels[15].angle = 150
+
+while True:
+    for angle in range (30, 80):
+        for c in range(0,15):
+            pca.channels[c].angle = angle
+        print(f'moved angle up to {angle}')
+        time.sleep(.05)
+            
+    for angle in range (80, 30,-1):
+        for c in range(0,15):
+            pca.channels[c].angle = angle
+        print(f'moved angle up to {angle}')
+        time.sleep(.05)

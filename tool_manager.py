@@ -78,7 +78,7 @@ class Tool:
         self.keyboard_key = tool['keyboard_key']       
         self.spin_down_time = tool['spin_down_time']
         self.last_used = 0
-        self.flagged = False
+        self.flagged = True
 
 
             
@@ -88,7 +88,6 @@ class Tool:
         if btn_dict['address'] == 'pi': # a button that is not directly attached to the pi
             self.btn = Button(btn_dict['pin'])
             self.btn.when_pressed = self.button_cycle
-            print(f"{self.name} button pressed")
         else:
             print('Buttons not directly connected to pi are not supported right now')
             #self.btn = buttons.Non_Standard_Button(btn_dict) # this needs to be developed for buttons not directly connected to the pi
@@ -121,11 +120,11 @@ class Tool:
         '''this runs when a real hard button is pressed. It overrides the voltage'''
         if self.status == 'on':
             self.override = False
-            print(f"Override for {self.name} OFF")
+            print(f"{self.name} button pressed. Tool and Override OFF")
             self.spindown()
         else:
             self.override = True
-            print(f"Override engaged for {self.name}")
+            print(f"{self.name} button pressed. Tool and Override engaged")
             self.turn_on()
 
     def turn_on(self):
@@ -160,7 +159,7 @@ class Tool:
             if self.led_type == "RGB":
                 self.led.color = (.1, .82, .90)
             elif self.led_type == "PWMLED":
-                self.led.value = .5
+                self.led.value = .1
             elif self.led_type == "RELAY":
                 self.led.off()
 

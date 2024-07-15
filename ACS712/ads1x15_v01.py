@@ -30,7 +30,7 @@ if use_voltage:
 
 
 # ads0 = ADS.ADS1115(i2c, address=0x48) # 48 is the one not on a board
-address=0x48
+address=0x4a
 # # amplify the signal
 # ads0.gain = 1 # this will not affect the 
 # Create single-ended input on channel 0
