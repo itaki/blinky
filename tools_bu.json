@@ -1,0 +1,116 @@
+[
+  {
+    "id_num": 367357352,
+    "name": "MiterSaw",
+    "status": "off",
+    "override": false,
+    "gate_prefs": ["MS"],
+    "button_pin": 5,
+    "led_type": "RGB",
+    "led_pins": [0],
+    "voltage_address": [
+      72,
+      0
+    ],
+    "keyboard_key": 50,
+    "last_used": 0,
+    "spin_down_time": 3,
+    "flagged": false
+  },
+  {
+    "id_num": 347345734573788,
+    "name": "MiterSawLeft",
+    "status": "off",
+    "override": false,
+    "gate_prefs": ["MS", "MSL"],
+    "button_pin": 0,
+    "led_type": "LED",
+    "led_pins": [21],
+    "voltage_address": [],
+    "keyboard_key": 51,
+    "last_used": 0,
+    "spin_down_time": 0,
+    "flagged": false
+  },
+  {
+    "id_num": 90896867068,
+    "name": "MiterSawRight",
+    "status": "off",
+    "override": false,
+    "gate_prefs": ["MS", "MSR"],
+    "button_pin": 0,
+    "led_type": "LED",
+    "led_pins": [22],
+    "voltage_address": [],
+    "keyboard_key": 52,
+    "last_used": 0,
+    "spin_down_time": 0,
+    "flagged": false
+  },
+  {
+    "id_num": 123764987,
+    "name": "TableSaw",
+    "status": "off",
+    "override": false,
+    "gate_prefs": ["T"],
+    "button_pin": 27,
+    "led_type": "none",
+    "led_pins": [0],
+    "voltage_address": [
+      74,
+      1
+    ],
+    "keyboard_key": 49,
+    "last_used": 0,
+    "spin_down_time": 3,
+    "flagged": false
+  },
+  {
+    "id_num": 803428459878,
+    "name": "Hose",
+    "status": "off",
+    "override": false,
+    "gate_prefs": ["H"],
+    "button_pin": 0,
+    "led_type": "none",
+    "led_pins": [0],
+    "voltage_address": [],
+    "keyboard_key": 52,
+    "last_used": 0,
+    "spin_down_time": 0,
+    "flagged": false
+  },
+  {
+    "id_num": 23452378,
+    "name": "FloorSweep",
+    "status": "off",
+    "override": false,
+    "gate_prefs": ["FS"],
+    "button_pin": 0,
+    "led_type": "none",
+    "led_pins": [0],
+    "voltage_address": [],
+    "keyboard_key": 52,
+    "last_used": 0,
+    "spin_down_time": 10,
+    "flagged": false
+  },
+  {
+    "id_num": 43575835686,
+    "name": "Lathe",
+    "status": "off",
+    "override": false,
+    "gate_prefs": ["L"],
+    "button_pin": 0,
+    "led_type": "none",
+    "led_pins": [0],
+    "voltage_address": [
+      72,
+      2
+    ],
+    "keyboard_key": 52,
+    "last_used": 0,
+    "spin_down_time": 10,
+    "flagged": false
+  }
+]

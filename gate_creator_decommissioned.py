@@ -1,8 +1,11 @@
+# gate manager
 import curses
+import keyboard # this library requires running the script as root
 import time
 import os, sys
-
+import json
 import questionary as q
+import get_full_path
 import blinky_bits as bb
 import reorder_dict
 from pathlib import Path
@@ -12,65 +15,51 @@ from gpiozero import LED, RGBLED, Button
 
 from styles import custom_style_dope, get_styles
 
-
 style = custom_style_dope
-import board
-import busio
-import json
-import get_full_path
-import adafruit_pca9685
-i2c = busio.I2C(board.SCL, board.SDA)
-from adafruit_servokit import ServoKit
-### hat = adafruit_pca9685.PCA9685(i2c) Put this in the application
-GATES_FILE = "gates.json"
-BACKUP_DIR = "_BU"
-class Gate_Manager:
-    gates: dict # dictionary of gate objects
+
+# Initialize the servo board
+kit = ServoKit(channels=16)
+gates_file = 'gates.json'
+backup_dir = '_BU'
+
+class Gate:
+    def __init__(self, name, number, location, status, pin, minimum, maximum, info):
+        self.name = name
+        self.number = number
+        self.location = location
+        self.status = status
+        self.pin = pin
+        self.min = minimum
+        self.max = maximum
+        self.info = info
+
+    def open(self):
+        kit.servo[self.pin].angle = self.max
+        print(f'opening {self.name}')
+        # send maximum to gate
+        self.status = 0
+
+
+    def close(self):
+        kit.servo[self.pin].angle = self.min
+        print(f'closing {self.name}')
+        # send minimum to gate
+        self.status = 1
+
+class Gate_manager:
+    gates: dict
     gates_file: str
     changed = False
     backed_up = False
+    board_addresses = []
 
-    def __init__(self, gates_file = "gates.json", backup_dir = "_BU") -> None:
+
+    def __init__(self, gates_file, backup_dir) -> None:
         self.gates_file = gates_file
-        self.load_gates() #load the gates from the file retuns 
         self.backup_dir = backup_dir
+        self.load_gates()
+        self.board_addresses
         
-
-    def load_gates(self): 
-        '''Takes a JSON file and returns a dictionary'''
-        # LOAD ALL THE GATES
-        if os.path.exists(self.gates_file): # if there is a gates file load it
-            file_path = get_full_path.path(self.gates_file)  # set the file path
-            with open(file_path, 'r') as f:  # read the gate json file
-                self.gates_dict = json.load(f)  # load the json into a python dict called gates_dict
-            self.build_gates() # builds the gate objects from the gates_dict
-        else:
-            self.gates_dict = {} # no gates 
-            print('no gate file available') #Fix this in future versions with get_gates
-
-
-    def build_gates(self):
-        '''Builds objects from the gate_list. Will not add gate if address doesn't exist'''
-        self.gates = {} # temporary variable to hold the gates
-
-        for gate in self.gates_dict: # create gate object
-            # print (gate)
-            self.gates[gate['name']] = Gate(
-                gate['name'],
-                gate['id'],
-                gate['physical_location'],
-                gate['status'],
-                gate['io_location'],
-                gate['min'],
-                gate['max'],
-                gate['info']
-            )
-            if self.gates[gate['name']].set_servo(): # if it can set a servo, meaning the address is valid at gate
-                print(f"SUCCESS {gate} ")
-            else:
-                print(f"REMOVED {gate} ")
-                self.gates.pop(gate['name'])
-
     def select_gates_file(self):
         files = os.listdir(self.backup_dir)
         files.append("Keep Files")
@@ -90,6 +79,35 @@ class Gate_Manager:
                     instruction=None,).ask()
         
         return selected_file
+    
+    def load_gates(self, gates_file = gates_file): 
+        '''Takes a JSON file and returns a dictionary of Gate objects'''
+        gates_list = []  # list
+        gates = {}
+            # LOAD ALL THE GATES
+        if os.path.exists(gates_file): # if there is a gates file load it
+            file_path = get_full_path.path(gates_file)  # set the file path
+            with open(file_path, 'r') as f:  # read the gate list
+                gates_list = json.load(f)  # load gate list into python
+
+            #print (gates_list)
+
+            for gate in gates_list:
+                gates[gate['name']] = Gate(
+                    gate['name'],
+                    gate['number'],
+                    gate['location'],
+                    gate['status'],
+                    gate['pin'],
+                    gate['min'],
+                    gate['max'],
+                    gate['info']
+                )
+                # 1print(gate)
+        else:
+            print('no gate file available') #Fix this in future versions with get_gates
+        self.gates = gates
+        return(gates)
 
     def write_gates(self, note = ''):
         '''Writes the gates in memory to the gates_file. Makes a backup beforehand'''
@@ -505,9 +523,7 @@ class Gate_Manager:
 
     def open_gate(self, gate_key):
         my_gate = self.gates[gate_key]
-        self.gates[gate_key].location.angle = my_gate.max
-        print("I should change the status")
-        my_gate.status = 0
+        kit.servo[my_gate.pin].angle = my_gate.max
 
     def close_gates(self):
         gates_list = list ( self.gates.keys())
@@ -516,8 +532,7 @@ class Gate_Manager:
 
     def close_gate(self, gate_key):
         my_gate = self.gates[gate_key]
-        self.gates[gate_key].location.angle = my_gate.min
-        my_gate.status = 1
+        kit.servo[my_gate.pin].angle = my_gate.min
     
     def set_gates(self, open_gates):
         '''Takes a list of gates that need to be open and opens them while making sure the rest are closed'''
@@ -525,13 +540,8 @@ class Gate_Manager:
             current_gate = self.gates[g]
             if current_gate.name in open_gates:
                 self.open_gate(g)
-                print(f'OPENING gate {current_gate.name} status = {current_gate.status}')
-                
             else:
                 self.close_gate(g)
-                print(f'CLOSEING gate {current_gate.name} status = {current_gate.status}')
-                
-
 
     
 
@@ -577,7 +587,7 @@ def main_menu(gm):
         if selected_file == "Keep Files":
             print("No gates loaded")
         else:
-            selected_file = BACKUP_DIR+'/'+selected_file
+            selected_file = backup_dir+'/'+selected_file
             gm.load_gates(selected_file)
             gm.write_gates('load_from_backup')
     
@@ -634,44 +644,21 @@ def main_menu(gm):
     elif action == "close all gates":
         pass
     elif action == "quit":
-        sys.exit()    
- 
-class Gate:
-    def __init__(self, name, id, physical_location, status, io_location, minimum, maximum, info):
-        self.name = name
-        self.id = id
-        self.physical_location = physical_location
-        self.status = status
-        self.io_location = io_location
-        self.min = minimum
-        self.max = maximum
-        self.info = info
+        sys.exit()
 
-    def set_servo(self):
-        try:
-            self.location = ServoKit(channels=16, 
-                                    address = self.io_location['address']).servo[self.io_location['pin']]
-            return True
-        except:
-            print (f"FAILED to create gate at address {self.io_location['address']} on pin {self.io_location['pin']}")
-            return False
+    
 
-    def open(self):
-        self.location.angle = self.max
-        print(f'opening {self.name}')
-        # send maximum to gate
-        self.status = 0
+def main():
+    gm = Gate_manager(gates_file, backup_dir)
+    print(f'LOADING GATES from {gm.gates_file} ')
+    gm.view_gates_compact()
+    while True:
+        main_menu(gm)
+        #gm.set_gate_name('T')
 
 
-    def close(self):
-        self.location.angle = self.min
-        print(f'closing {self.name}')
-        # send minimum to gate
-        self.status = 1
+
 
 
 if __name__ == "__main__":
-    gm = Gate_Manager(GATES_FILE, BACKUP_DIR)
-    for gate in gm.gates:
-        print (gate)
-    
+    main()

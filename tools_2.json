@@ -1,0 +1,16 @@
+{
+    "button": {
+        "config": {
+            "address": "pi",
+            "button_pin": 5,
+            "button_type": "momentary",
+            "status": "off"
+
+        },
+        "led_config": {
+            "type": "RGB",
+            "address": 67,
+            "pins": [0, 1, 2]
+        }
+    }
+}

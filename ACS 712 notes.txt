@@ -1,0 +1,11 @@
+ACS 712 notes 
+ADS 1115
+
+Make sure to set the address ads0 - ads3 depending on wiring
+
+<.6 means nothing is attached
+from 1.652- 1.656 a ACS 712 is plugged into it
+
+when it goes above 1.656 it shifts wildly but it looks like if the average over 5 or 6 is above say 1.75 then it's on
+
+the chan value is liek 3200 with nothing plugged in

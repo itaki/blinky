@@ -2,13 +2,14 @@ import time
 import blinky_bits
 import pygame
 from pygame.locals import *
-from gpiozero import LED, RGBLED, Button
+from gpiozero import LED, RGBLED, Button, DigitalOutputDevice
 import board
 import busio
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
-from volt import Voltage_sensor
-from gate_manager import Gate_manager
+from tool_manager import Tool_Manager
+import voltage_sensor as vs
+from gate_manager import Gate_Manager
 
 # from os.path import dirname, join
 
@@ -16,12 +17,12 @@ from gate_manager import Gate_manager
 tools_file = 'tools.json'
 gates_file = 'gates.json'
 backup_dir = 'BU/'
-#tools_file = 'tools_large_number.json'
-#gates_file = 'gates_large_number.json'
-tools = blinky_bits.get_tools(tools_file)
-gates = blinky_bits.get_gates(gates_file)
-num_of_buttons = len(tools)
-num_of_gates = len(gates)
+
+tm = Tool_Manager(tools_file, backup_dir)
+gm = Gate_Manager(gates_file, backup_dir) # create the gate manager
+
+num_of_buttons = len(tm.tools)
+num_of_gates = len(gm.gates)
 
 # set which interfaces to use
 
@@ -29,12 +30,11 @@ use_gui = True
 use_buttons = False
 use_voltage = True
 use_collector = True
-collector_pin = 21
+
 
 if use_gui: 
     '''intitalizes pygame canvas'''
     pygame.init()
-
     screen_width = 400
     screen_height = 440
     screen = pygame.display.set_mode((screen_width, screen_height))
@@ -66,17 +66,12 @@ if use_voltage:
 
 
 
-
-def init():
-    pass
-
-
 class Dust_collector:
-    def __init__(self, status, last_spin_up, min_uptime):
+    def __init__(self, pin, min_uptime):
         self.status = 'off'
         self.last_spin_up = time.time()
         self.min_uptime = min_uptime
-        self.relay_pin = collector_pin
+        self.relay = DigitalOutputDevice(pin, active_high=True, initial_value=False)
 
         # turn off rosie relay pin
 
@@ -87,11 +82,13 @@ class Dust_collector:
         elif self.status == 'off':
             print('rosie was OFF and being turned on')
             self.status = 'on'
+            self.relay.on()
             # turn rosies relay pin on
             self.last_spin_up = time.time()
 
     def shutdown(self):
         if self.status != 'off':
+            self.relay.off()
             self.status = 'off'
             # turn off rosie relay pin
             print("============rosie in now turned off==================")
@@ -158,7 +155,7 @@ class Button_PG_gate():
     def draw_button(self):
         global clicked
         action = False
-        selected_gate = gates[self.name] #select the gate associated with the button
+        selected_gate = gm.gates[self.name] #select the gate associated with the button
 
         # get mouse position
         pos = pygame.mouse.get_pos()
@@ -273,7 +270,7 @@ class Button_PG_tool():
     def draw_button(self):
         global clicked
         action = False
-        selected_tool = tools[self.name] # select the tool associated with this button
+        selected_tool = tm.tools[self.name] # select the tool associated with this button
 
         # get mouse position
         pos = pygame.mouse.get_pos()
@@ -351,8 +348,8 @@ def create_tool_gui_buttons():
     x = 0
     y = 0
     gui_buttons = {}
-    for tool in tools:
-        current_tool = tools[tool]
+    for tool in tm.tools:
+        current_tool = tm.tools[tool]
         gui_buttons[current_tool.name] = Button_PG_tool(x,y,current_tool.name)
         x = x + button_width
         if x >= button_panel_width:
@@ -366,9 +363,9 @@ def create_gate_gui_buttons():
     x = 0 + (screen_width - gates_width) + (gates_width/2)-(gate_width/2)
     y = 0
     gate_buttons = {}
-    for gate in gates:
-        current_gate = gates[gate]
-        gate_buttons[gates[gate].name] = Button_PG_gate(x,y,gates[gate].name)
+    for gate in gm.gates:
+        current_gate = gm.gates[gate]
+        gate_buttons[gm.gates[gate].name] = Button_PG_gate(x,y,gm.gates[gate].name)
         x = x + button_width
         if x >= button_panel_width:
             x = 0 + (screen_width - gates_width) + (gates_width/2)-(gate_width/2)
@@ -376,37 +373,11 @@ def create_gate_gui_buttons():
 
     return gate_buttons
 
-def create_real_buttons():
-    for tool in tools:
-        # select the tool I'm currently working with
-        current_tool = tools[tool]
-        if current_tool.button_pin != 0:
-            print(f"Creating {current_tool.name} on {current_tool.button_pin}")
-            #create a button object and put it in the dictionary
-            current_tool.btn = Button(current_tool.button_pin)
-            current_tool.btn.when_pressed = current_tool.button_cycle
-            if current_tool.led_type == "RGB":
-                current_tool.led = RGBLED(current_tool.r_pin, current_tool.g_pin, current_tool.b_pin)
-                print(f"created RGBLED on {current_tool.r_pin, current_tool.g_pin, current_tool.b_pin}")
-                #current_tool.led.color = (.1,.82,.90)
-            elif current_tool.led_type == "LED":
-                current_tool.led = LED(current_tool.r_pin)
-                print(f"created LED on {current_tool.r_pin}")
-            else:
-                print(f"no button created for {current_tool.name}")
-            
-
-def create_voltage_switchs():
-    for tool in tools:
-        current_tool = tools[tool]
-        if current_tool.voltage_pin != []:
-            current_tool.voltage_sensor = Voltage_sensor((current_tool.voltage_pin[0]), current_tool.voltage_pin[1], current_tool.amp_trigger)
-
 
 def tools_in_use():
     tools_on = []
-    for tool in tools:
-        current_tool = tools[tool]
+    for tool in tm.tools:
+        current_tool = tm.tools[tool]
         if current_tool.status != 'off':
             tools_on.append( current_tool.name)
             print(f'{current_tool.name} which is tool {current_tool.id_num}' )
@@ -415,9 +386,9 @@ def tools_in_use():
 
 def keyboard_manager(key):
     '''see which tool the keyboard has modified'''
-    for tool in tools:
+    for tool in tm.tools:
         # this only runs if it detects that the key pressed is a tool
-        current_tool = tools[tool]
+        current_tool = tm.tools[tool]
         if key == current_tool.keyboard_key:
             print(f'Tool {current_tool.name} selected via Keyboard')
             if current_tool.status == 'on':  # Tools is running so turn it off
@@ -447,26 +418,26 @@ def get_gate_settings(tools):
     
 def shop_manager():
     '''the shop manager takes the tools list and checks each one to see what it needs to do'''
-    for tool in tools:
-        current_tool = tools[tool]
+    for tool in tm.tools:
+        current_tool = tm.tools[tool]
         if current_tool.flagged == True:             #if a tool has been flagged make sure to address it
         
             if current_tool.status == 'on':
                 if current_tool.spin_down_time >= 0:
                     rosie.spinup()
-                gate_settings = get_gate_settings(tools) ## this need to be a shop_manger method that talks to tools and then tells gatekeeper what to do
-                gatekeeper.set_gates(gate_settings)
+                gate_settings = get_gate_settings(tm.tools) ## this need to be a shop_manger method that talks to tools and then tells gm what to do
+                gm.set_gates(gate_settings)
                 current_tool.flagged = False
                 if current_tool.spin_down_time < 0: #use -1 to not turn tool on at all
                     current_tool.status = 'off'
 
         
             elif current_tool.status == 'off':
-                opengates = get_gate_settings(tools) 
+                opengates = get_gate_settings(tm.tools) 
                 tools_on = tools_in_use()
                 if tools_on: 
                     print(f'there are tools in use {tools_on}')
-                    gatekeeper.set_gates(opengates)                  
+                    gm.set_gates(opengates)                  
                 else:
                     print(f'there are NO tools in use ')        #check to see if any tools are on
                     rosie.shutdown()
@@ -484,21 +455,22 @@ def shop_manager():
 ################################################################################
 # START APP HERE
 ################################################################################
-min_uptime = 5 #smallest amount of time the dust collector can be on for
-rosie = Dust_collector('off', time.time(), min_uptime)  # create the dust collector
-gatekeeper = Gate_manager(gates_file, backup_dir) # create the gate manager
+min_uptime = 10 #smallest amount of time the dust collector can be on for
+used_pins = tm.get_used_pins()
+collector_pin = 25
+if collector_pin in used_pins:
+    tool_using_pin = tm.whats_on_pin(collector_pin)
+    print(f"The assigned collector pin {collector_pin} is being used by {tool_using_pin} ")
+    print(f"The used pins are {used_pins}")
+    exit()
+rosie = Dust_collector(collector_pin, min_uptime)  # create the dust collector
+
 #tools['CloseAll'].status = "on"
 #tools['CloseAll'].flagged = True
 
 if use_gui:
     gui_buttons = create_tool_gui_buttons()
     gate_buttons = create_gate_gui_buttons()
-
-if use_buttons:
-    create_real_buttons()
-
-if use_voltage:
-    create_voltage_switchs()
 
 
 run = True
@@ -523,14 +495,15 @@ if __name__ == '__main__':
             pygame.display.update()
 
         if use_voltage:
-            for tool in tools:
-                if tools[tool].override == False:
-                    if tools[tool].voltage_pin != []: # only check for tools that are on the amp trigger
-                        am_i_on = tools[tool].voltage_sensor.am_i_on()
-                        if am_i_on and tools[tool].status != 'on':
-                            tools[tool].turn_on()
-                        elif not am_i_on and tools[tool].status == 'on':
-                            tools[tool].spindown()
+            tools_with_sensor = vs.get_tools_with_sensor(tm.tools)
+            for tool in tools_with_sensor:
+                selected_tool = tm.tools[tool]
+                if selected_tool.override == False:
+                    am_i_on = tm.tools[tool].voltage_sensor.am_i_on()
+                    if am_i_on and tm.tools[tool].status != 'on':
+                        tm.tools[tool].turn_on()
+                    elif not am_i_on and tm.tools[tool].status == 'on':
+                        tm.tools[tool].spindown()
 
 
 

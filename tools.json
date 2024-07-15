@@ -1,214 +1,151 @@
 [
   {
-    "id_num": 1,
-    "name": "TableSaw",
-    "status": "off",
-    "override": false,
-    "gate_prefs": [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    "button_pin": 27,
-    "led_type": "none",
-    "led_pins": [0],
-    "voltage_pin": [
-      "0x48",
-      0
-    ],
-    "amp_trigger": 1.658,
-    "keyboard_key": 49,
-    "last_used": 0,
-    "spin_down_time": 3,
-    "flagged": false
-  },
-  {
-    "id_num": 8,
-    "name": "Hose",
-    "status": "off",
-    "override": false,
-    "gate_prefs": [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    "button_pin": 0,
-    "led_type": "none",
-    "led_pins": [0],
-    "voltage_pin": [],
-    "amp_trigger": 1.75,
-    "keyboard_key": 52,
-    "last_used": 0,
-    "spin_down_time": 0,
-    "flagged": false
-  },
-  {
-    "id_num": 5,
-    "name": "FloorSweep",
-    "status": "off",
-    "override": false,
-    "gate_prefs": [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
-    "button_pin": 0,
-    "led_type": "none",
-    "led_pins": [0],
-    "voltage_pin": [],
-    "amp_trigger": 1.75,
-    "keyboard_key": 52,
-    "last_used": 0,
-    "spin_down_time": 10,
-    "flagged": false
-  },
-  {
-    "id_num": 2,
+    "id_num": 367357352,
     "name": "MiterSaw",
-    "status": "off",
-    "override": false,
-    "gate_prefs": [1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    "button_pin": 17,
-    "led_type": "none",
-    "led_pins": [0],
-    "voltage_pin": [],
-    "amp_trigger": 1.75,
+    "gate_prefs": ["MS"],
+    "button": {
+      },
+    "led": {
+    },
+    "volt": {
+      "type": "ADS1115",
+      "voltage_address": {
+        "board_address": 72,
+        "pin": 0
+      }
+    },
+    
     "keyboard_key": 50,
     "last_used": 0,
-    "spin_down_time": 3,
-    "flagged": false
+    "spin_down_time": 3
   },
   {
-    "id_num": 3,
+    "id_num": 347345734573788,
     "name": "MiterSawLeft",
-    "status": "off",
-    "override": false,
-    "gate_prefs": [1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1 ],
-    "button_pin": 0,
-    "led_type": "none",
-    "led_pins": [0],
-    "voltage_pin": [],
-    "amp_trigger": 1.75,
+    "gate_prefs": ["MS", "MSL"],
+    "button": {
+      "address": "pi",
+      "pin": 22,
+      "button_type": "momentary"
+    },
+    "led": {
+      "type": "PWMLED",
+      "address": "pi",
+      "pin": 27
+    },
+    "volt": {
+
+    },
     "keyboard_key": 51,
-    "last_used": 0,
-    "spin_down_time": 0,
-    "flagged": false
+    "spin_down_time": 0
   },
   {
-    "id_num": 4,
+    "id_num": 90896867068,
     "name": "MiterSawRight",
-    "status": "off",
-    "override": false,
-    "gate_prefs": [1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1],
-    "button_pin": 0,
-    "led_type": "none",
-    "led_pins": [0],
-    "voltage_pin": [],
-    "amp_trigger": 1.75,
+    "gate_prefs": ["MS", "MSR"],
+    "button": {
+      "address": "pi",
+      "pin": 18,
+      "button_type": "momentary"
+    },
+    "led": {
+      "type": "PWMLED",
+      "address": "pi",
+      "pin": 26
+    },
+    "volt": {
+
+    },
     "keyboard_key": 52,
-    "last_used": 0,
-    "spin_down_time": 0,
-    "flagged": false
+    "spin_down_time": 0
   },
   {
-    "id_num": 7,
-    "name": "Lathe",
-    "status": "off",
-    "override": false,
-    "gate_prefs": [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1],
-    "button_pin": 0,
-    "led_type": "none",
-    "led_pins": [0],
-    "voltage_pin": [],
-    "amp_trigger": 1.75,
-    "keyboard_key": 52,
-    "last_used": 0,
-    "spin_down_time": 10,
-    "flagged": false
-  },
-  {
-    "id_num": 6,
+    "id_num": 12334764987,
     "name": "BandSaw",
-    "status": "off",
-    "override": false,
-    "gate_prefs": [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1 ],
-    "button_pin": 0,
-    "led_type": "none",
-    "led_pins": [0],
-    "voltage_pin": [],
-    "amp_trigger": 1.75,
-    "keyboard_key": 52,
-    "last_used": 0,
-    "spin_down_time": 6,
-    "flagged": false
+    "gate_prefs": ["BS", "CB"],
+    "button": {
+    },
+    "led": {
+    },
+    "volt": {
+      "type": "ADS1115",
+      "voltage_address": {
+        "board_address": 72,
+        "pin": 1
+      }
+    },
+    "keyboard_key": 49,
+    "spin_down_time": 3
+  },  {
+    "id_num": 123764987,
+    "name": "TableSaw",
+    "gate_prefs": ["T"],
+    "button": {
+    },
+    "led": {
+      "type": "RELAY",
+      "address": "pi",
+      "pin": 6
+    },
+    "volt": {
+      "type": "ADS1115",
+      "voltage_address": {
+        "board_address": 74,
+        "pin": 0
+      }
+    },
+    "keyboard_key": 49,
+    "spin_down_time": 3
   },
   {
-    "id_num": 9,
-    "name": "SandingTable",
-    "status": "off",
-    "override": false,
-    "gate_prefs": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
-    "button_pin": 0,
-    "led_type": "none",
-    "led_pins": [0],
-    "voltage_pin": [],
-    "amp_trigger": 1.75,
+    "id_num": 803428459878,
+    "name": "Hose",
+    "gate_prefs": ["HOSE", "CB"],
+    "button": {
+      "address": "pi",
+      "pin": 5,
+      "button_type": "momentary"
+    },
+    "led": {
+      "type": "RGB",
+      "address": "pi",
+      "pins": [19,20,21]
+    },
+    "volt": {
+
+    },
     "keyboard_key": 52,
-    "last_used": 0,
-    "spin_down_time": 6,
-    "flagged": false
+    "spin_down_time": 0
   },
   {
-    "id_num": 0,
-    "name": "Jointer",
-    "status": "off",
-    "override": false,
-    "gate_prefs": [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
-    "button_pin": 0,
-    "led_type": "none",
-    "led_pins": [0],
-    "voltage_pin": [],
-    "amp_trigger": 1.75,
+    "id_num": 23452378,
+    "name": "FloorSweep",
+    "gate_prefs": ["FS"],
+    "button": {
+
+    },
+    "led": {
+
+    },
+    "volt": {
+
+    },
     "keyboard_key": 52,
-    "last_used": 0,
-    "spin_down_time": 4,
-    "flagged": false
+    "spin_down_time": 10
   },
   {
-    "id_num": 12,
-    "name": "Planer",
-    "status": "off",
-    "override": false,
-    "gate_prefs": [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
-    "button_pin": 0,
-    "led_type": "none",
-    "led_pins": [0],
-    "voltage_pin": [],
-    "amp_trigger": 1.75,
+    "id_num": 43575835686,
+    "name": "Lathe",
+    "gate_prefs": ["L"],
+    "button": {
+
+    },
+    "led": {
+    },
+    "volt": {
+
+    },
     "keyboard_key": 52,
-    "last_used": 0,
-    "spin_down_time": 4,
-    "flagged": false
-  },
-  {
-    "id_num": 11,
-    "name": "OpenAll",
-    "status": "off",
-    "override": false,
-    "gate_prefs": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0],
-    "button_pin": 0,
-    "led_type": "none",
-    "led_pins": [0],
-    "voltage_pin": [],
-    "amp_trigger": 1.75,
-    "keyboard_key": 52,
-    "last_used": 0,
-    "spin_down_time": 0,
-    "flagged": false
-  },
-  {
-    "id_num": 12,
-    "name": "CloseAll",
-    "status": "off",
-    "override": false,
-    "gate_prefs": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    "button_pin": 0,
-    "led_type": "none",
-    "led_pins": [0],
-    "voltage_pin": [],
-    "amp_trigger": 1.75,
-    "keyboard_key": 52,
-    "last_used": 0,
-    "spin_down_time": 0,
-    "flagged": false
+    "spin_down_time": 10
   }
-  
 ]

@@ -38,6 +38,7 @@ class Voltage_sensor:
         self.error_raised = False
         self.start = False
         self.pins = {'0' : ADS.P0, '1' : ADS.P1, '2' : ADS.P2, '3' : ADS.P3}
+        self.was_i_on = False
         try:
             #self.chan = AnalogIn(adafruit_ads1x15.ads1115.ADS1115(i2c, address = self.address), adafruit_ads1x15.ads1115.P0) 
             self.chan = AnalogIn(ADS.ADS1115(i2c, address = self.address), self.pins[str(self.pin_number)])
@@ -52,7 +53,7 @@ class Voltage_sensor:
         if len(self.readings) > self.readings_for_check:
             self.start = True
             self.readings.pop(0) # pop off the first reading to keep it tidy
-        self.reading = max(self.readings)
+        self.reading = max(self.readings) # Just hold onto the max reading
 
     
     def am_i_on(self):
@@ -72,22 +73,30 @@ class Voltage_sensor:
                 self.error_raised = False # turn off the error raised because an AC715 has been added
                 return True
 
+def voltage_readout(voltage_sensor):
+    if voltage_sensor.am_i_on() == True and voltage_sensor.was_i_on == False:
+            print(f"\rVoltage Sensor at {hex(voltage_sensor.address)} and pin {voltage_sensor.pin_number} is on and reading {voltage_sensor.reading}" )
+            voltage_sensor.was_i_on = True
+    elif voltage_sensor.am_i_on() == False and voltage_sensor.was_i_on ==True:
+        print(f"\rMax reading {voltage_sensor.reading}")
+        voltage_sensor.was_i_on = False
+
+
     
 if __name__=="__main__":
     address = "0x48"
-    pin_number = 0
-    trigger = 1.658
-    voltage_sensor = Voltage_sensor(address, pin_number, trigger)
+    pin_number0 = 0
+    trigger = 2.658
+    voltage_sensor0 = Voltage_sensor(address, pin_number0, trigger)
+    voltage_sensor1 = Voltage_sensor(address, 1, trigger)
+    voltage_sensor2 = Voltage_sensor(address, 2, trigger)
+    voltage_sensor3 = Voltage_sensor(address, 3, trigger)
     is_it_on = False
 
     while True:
-        if voltage_sensor.am_i_on() == True and is_it_on == False:
-            print(f"\rVoltage Sensor at {hex(voltage_sensor.address)} and pin {voltage_sensor.pin_number} is on and reading {voltage_sensor.reading}" )
-            is_it_on = True
-        elif voltage_sensor.am_i_on() == False and is_it_on ==True:
-            print(f"\rAverage reading {voltage_sensor.reading}")
-            is_it_on = False
+        print(voltage_sensor0.get_reading(), voltage_sensor1.get_reading(), voltage_sensor2.get_reading(), voltage_sensor3.get_reading())
 
-        # time.sleep(.5)
+
+        time.sleep(.5)
 
 

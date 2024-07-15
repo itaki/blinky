@@ -35,12 +35,11 @@ pin1.pull = digitalio.Pull.UP
     # Now loop blinking the pin 0 output and reading the state of pin 1 input.
 while True:
     # Blink pin 0 on and then off.
-    pin0.value = 1
-    time.sleep(0.5)
-    pin0.value = .5
-    time.sleep(0.5)
+    for i in range(1000):
+        value = i/1000
+        pin0.value = value
+
     pin0.value = 0
-    time.sleep(0.5)
 
     # Read pin 1 and print its state.
 
