@@ -8,7 +8,6 @@ import errno
 from adafruit_servokit import ServoKit
 from gpiozero import LED, RGBLED, Button
 kit = ServoKit(channels=16)
-import voltage_sensor
 
 def center_x(width, string):
     '''Takes curses terminal width and a string and determines where to start it to center it'''
@@ -21,10 +20,13 @@ class Tool:
                  status,
                  override,
                  gate_prefs,
-                 button={},
+                 button_pin=0,
                  led_type='none',
-                 led_pins=[],
-                 voltage_address=[],
+                 r_pin=0,
+                 g_pin=0,
+                 b_pin=0,
+                 voltage_pin=12,
+                 amp_trigger=10,
                  keyboard_key=0,
                  last_used=0,
                  spin_down_time=5,
@@ -34,20 +36,17 @@ class Tool:
         self.status = status
         self.override = override
         self.gate_prefs = gate_prefs
-        self.button = button
-        # if self.button != {}:
-        #     self.button_pin = self.button["button"]["config"]["button_pin"]
-        self.button = button
+        self.button_pin = button_pin
         self.led_type = led_type
-        self.led_pins = led_pins
-        self.voltage_address = voltage_address
-        if self.voltage_address != []:
-            self.voltage_sensor = voltage_sensor.Voltage_sensor(self.voltage_address)
-
+        self.r_pin = r_pin
+        self.g_pin = g_pin
+        self.b_pin = b_pin
+        self.voltage_pin = voltage_pin
+        self.amp_trigger = amp_trigger
         self.keyboard_key = keyboard_key
-        self.last_used = 0
+        self.last_used = last_used
         self.spin_down_time = spin_down_time
-        self.flagged = False
+        self.flagged = flagged
 
         # if self.button_pin != 0:
         #     print(f"Creating {self.name} on {self.button_pin}")
@@ -110,6 +109,35 @@ class Tool:
         print(f'----------->{self.name} turned OFF')
 
 
+class Gate:
+    def __init__(self, name, number, location, status, pin, minimum, maximum, info):
+        self.name = name
+        self.number = number
+        self.location = location
+        self.status = status
+        self.pin = pin
+        self.min = minimum
+        self.max = maximum
+
+    def open(self):
+
+        kit.servo[self.pin].angle = self.max
+        print(f'opening {self.name}')
+        # send maximum to gate
+        self.status = 0
+
+       
+
+    def close(self):
+
+        kit.servo[self.pin].angle = self.min
+        print(f'closing {self.name}')
+        # send minimum to gate
+        self.status = 1
+
+
+
+
 def get_tools(file = 'tools.json'):
     tools_list = []
     tools = {}
@@ -126,8 +154,13 @@ def get_tools(file = 'tools.json'):
                 tool['status'],
                 tool['override'],
                 tool['gate_prefs'],
-                tool['button'],
-                tool['voltage_address'],
+                tool['button_pin'],
+                tool['led_type'],
+                tool['r_pin'],
+                tool['g_pin'],
+                tool['b_pin'],
+                tool['voltage_pin'],
+                tool['amp_trigger'],
                 tool['keyboard_key'],
                 tool['last_used'],
                 tool['spin_down_time'],
@@ -137,7 +170,29 @@ def get_tools(file = 'tools.json'):
     return tools
     #print(f'These are your tools {tools}')
 
+def get_gates(file): 
+    gates_list = []  # list
+    gates = {}
+        # LOAD ALL THE GATES
+    if os.path.exists(file): # if there is a gates file load it
+        file_path = get_full_path.path(file)  # set the file path
+        with open(file_path, 'r') as f:  # read the gate list
+            gates_list = json.load(f)  # load gate list into python
 
+        for gate in gates_list:
+            gates[gate['name']] = Gate(
+                gate['name'],
+                gate['number'],
+                gate['location'],
+                gate['status'],
+                gate['pin'],
+                gate['min'],
+                gate['max'],
+                gate['info']
+            )
+            # 1print(tool)
+    return(gates)
+    #print(f'These are your tools {gates}')
 
 def backup_file(file, note = '', backup_directory = '_BU'):
     '''Takes backup directory and file_name and backs the file up with date stamp'''
@@ -158,7 +213,8 @@ def backup_file(file, note = '', backup_directory = '_BU'):
 
 if __name__ == "__main__":
     tools = get_tools('tools.json')
-
+    gates = get_gates('gates.json')
+    print (len(gates))
     print (tools['TableSaw'].name)
     for tool in tools:
         pass

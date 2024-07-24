@@ -1,7 +1,0 @@
-0x24 36 = island expander
-0x40 64 = main servo
-0x43 67 = high servo
-0x48 72 = main volt
-0x4A 74 = island volt 
-0x50 80 = island servo
-
