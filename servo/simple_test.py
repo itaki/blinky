@@ -15,13 +15,14 @@ from adafruit_pca9685 import PCA9685
 i2c_bus = busio.I2C(SCL, SDA)
 
 # Create a simple PCA9685 class instance.
-pca = PCA9685(i2c_bus, address = 0x48) 
+pca = PCA9685(i2c_bus, address = 0x40) 
 
-# 50 is table saw 
-# 40 is main board
+# 43 is top of island branch hex 67
+# 50 is work bench board hex 80
+# 40 is main board hex 64
 
 # Set the PWM frequency to 60hz.
-pca.frequency = 1000
+pca.frequency = 50
 
 # Set the PWM duty cycle for channel zero to 50%. duty_cycle is 16 bits to match other PWM objects
 # but the PCA9685 will only actually give 12 bits of resolution.
@@ -29,7 +30,7 @@ pca.frequency = 1000
 
 
 
-# pca.channels[1].angle = 90
+pca.channels[12].angle = 90
 # pca.channels[7].angle = 70
 # pca.channels[11].angle = 70
 # pca.channels[15].angle = 70

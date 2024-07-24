@@ -51,4 +51,4 @@ while True:
                     set_range = 0
                 
                 print(f"Angle = {set_range}")
-                kit.servo[0].angle = set_range
+                kit.servo[12].angle = set_range

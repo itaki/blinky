@@ -12,7 +12,8 @@
       "voltage_address": {
         "board_address": 72,
         "pin": 0
-      }
+      },
+      "sensitivity": 4
     },
     
     "keyboard_key": 50,
@@ -72,7 +73,8 @@
       "voltage_address": {
         "board_address": 72,
         "pin": 1
-      }
+      },
+      "sensitivity": 4
     },
     "keyboard_key": 49,
     "spin_down_time": 15
@@ -160,7 +162,8 @@
       "voltage_address": {
         "board_address": 74,
         "pin": 0
-      }
+      },
+      "sensitivity": 4
     },
     "keyboard_key": 49,
     "spin_down_time": 10
@@ -179,7 +182,8 @@
       "voltage_address": {
         "board_address": 74,
         "pin": 1
-      }
+      },
+      "sensitivity": 4
     },
     "keyboard_key": 49,
     "spin_down_time": 1
@@ -194,7 +198,12 @@
 
     },
     "volt": {
-
+      "type": "ADS1115",
+      "voltage_address": {
+        "board_address": 74,
+        "pin": 3
+      },
+      "sensitivity": 4
     },
     "keyboard_key": 49,
     "spin_down_time": 0
@@ -212,7 +221,8 @@
       "voltage_address": {
         "board_address": 74,
         "pin": 2
-      }
+      },
+      "sensitivity": 4
     },
     "keyboard_key": 49,
     "spin_down_time": 10

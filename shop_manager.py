@@ -36,7 +36,7 @@ import board
 import busio
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
-from gate_creator_decommissioned import Gate_manager
+from _drop.gate_creator_decommissioned import Gate_manager
 
 
 # create some list of shit I got

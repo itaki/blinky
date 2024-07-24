@@ -14,7 +14,12 @@ from adafruit_pca9685 import PCA9685
 i2c = busio.I2C(SCL, SDA)
 
 # Create a simple PCA9685 class instance.
-pca = PCA9685(i2c, address=0x43)
+pca = PCA9685(i2c, address=0x40)
+# 40 is main board hex 64
+# 43 is top of island branch hex 67
+# 50 is work bench board hex 80
+servo3 = servo.Servo(pca.channels[12])
+
 # You can optionally provide a finer tuned reference clock speed to improve the accuracy of the
 # timing pulses. This calibration will be specific to each board and its environment. See the
 # calibration.py example in the PCA9685 driver.
@@ -39,7 +44,7 @@ pca.frequency = 50
 # The pulse range is 750 - 2250 by default. This range typically gives 135 degrees of
 # range, but the default is to use 180 degrees. You can specify the expected range if you wish:
 # servo3 = servo.Servo(pca.channels[7], actuation_range=135)
-servo3 = servo.Servo(pca.channels[0])
+
 
 # We sleep in the loops to give the servo time to move into position.
 for i in range(180):
