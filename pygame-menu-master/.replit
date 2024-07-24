@@ -1,3 +1,0 @@
-onBoot = "python setup.py install; clear"
-language = "python3"
-run = "python pygame_menu/examples/simple.py"
